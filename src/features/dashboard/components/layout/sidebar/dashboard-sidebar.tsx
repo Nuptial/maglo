@@ -91,9 +91,9 @@ const DashboardSidebar = () => {
         onKeyDown={(event) =>
           handleKeyDown(event, () => handleNavClick(link.label))
         }
-        className={`flex w-full items-center gap-4 rounded-[18px] px-4 py-3 text-base font-semibold ${
+        className={`flex w-full items-center gap-4 rounded-[18px] px-4 py-3 text-base font-semibold outline-none focus:outline-none focus-visible:outline-none ${
           isActive
-            ? "bg-[#ccff33] text-slate-900 shadow-sm"
+            ? "bg-[#ccff33] text-slate-900"
             : "text-slate-400 transition hover:text-slate-600"
         }`}
       >
@@ -112,12 +112,12 @@ const DashboardSidebar = () => {
   };
 
   return (
-    <aside className="hidden w-72 flex-col bg-[#fafaFA] px-6 py-8 lg:flex">
+    <aside className="hidden w-[250px] max-w-[250px] flex-col bg-[#fafaFA] px-[25px] pt-[30px] pb-[100px] lg:flex">
       <div className="flex items-center gap-3">
         <Logo />
       </div>
-      <div className="mt-10 space-y-3">{primaryLinks.map(renderNavButton)}</div>
-      <div className="mt-auto space-y-3">
+      <div className="mt-10">{primaryLinks.map(renderNavButton)}</div>
+      <div className="mt-auto">
         <div className="h-px" />
         {secondaryLinks.map(renderNavButton)}
       </div>

@@ -42,7 +42,7 @@ const RecentTransactionsCard = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-sm">
+    <section className="rounded-3xl bg-white px-[25px] py-[20px] shadow-sm">
       <div className="flex items-center justify-between">
         <p className="text-2xl font-semibold text-slate-900">
           Recent Transaction
@@ -56,47 +56,53 @@ const RecentTransactionsCard = () => {
         </button>
       </div>
       <div className="mt-6">
-        <div className="grid grid-cols-[3fr,1fr,1fr,1fr] gap-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <div className="grid grid-cols-[3fr_1fr_1fr_1fr] gap-x-[15px] text-xs font-semibold uppercase tracking-wide text-slate-400">
           <span>Name/Business</span>
           <span>Type</span>
           <span className="text-right">Amount</span>
           <span className="text-right">Date</span>
         </div>
-        <div className="mt-4 divide-y divide-slate-100">
-          {recentTransactions.map((transaction) => (
-            <article
-              key={transaction.id}
-              className="grid grid-cols-[3fr,1fr,1fr,1fr] gap-4 py-4 text-sm text-slate-900"
-            >
-              <div className="flex items-center gap-3">
-                <span
-                  className={`flex h-12 w-12 items-center justify-center rounded-2xl ${transaction.logoBg}`}
-                >
+        <div className="mt-5 flex flex-col">
+          {recentTransactions.map((transaction, index) => (
+            <>
+              {index > 0 && (
+                <div
+                  className="h-px bg-[#F5F5F5] mt-[13px] mb-[15px]"
+                  aria-hidden
+                />
+              )}
+              <article
+                key={transaction.id}
+                className="max-h-[40px] grid grid-cols-[3fr_1fr_1fr_1fr] gap-x-[15px] text-sm text-slate-900 pb-[13px]"
+              >
+                <div className="flex items-center gap-[14px]">
                   <img
                     src={transaction.logoUrl}
                     alt=""
                     aria-hidden
-                    className="h-8 w-8 object-contain"
+                    className="h-10 w-10 object-contain rounded-5"
                     loading="lazy"
                   />
-                </span>
-                <div>
-                  <p className="font-semibold">{transaction.title}</p>
-                  <p className="text-xs text-slate-400">
-                    {transaction.business}
-                  </p>
+                  <div>
+                    <p className="font-semibold text-[14px]">
+                      {transaction.title}
+                    </p>
+                    <p className="text-xs text-slate-400 text-[12px]">
+                      {transaction.business}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center text-slate-500">
-                {transaction.type}
-              </div>
-              <div className="flex items-center justify-end font-semibold">
-                {transaction.amount}
-              </div>
-              <div className="flex items-center justify-end text-slate-400">
-                {transaction.dateLabel}
-              </div>
-            </article>
+                <div className="flex items-center text-slate-500">
+                  {transaction.type}
+                </div>
+                <div className="flex items-center justify-end font-semibold">
+                  {transaction.amount}
+                </div>
+                <div className="flex items-center justify-end text-slate-400">
+                  {transaction.dateLabel}
+                </div>
+              </article>
+            </>
           ))}
         </div>
       </div>

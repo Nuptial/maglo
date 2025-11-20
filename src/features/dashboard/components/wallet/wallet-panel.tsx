@@ -1,35 +1,49 @@
-import {
-  CardChipIcon,
-  ContactlessIcon,
-} from "@/features/dashboard/components/icons/dashboard-icons";
+import { ContactlessIcon } from "@/features/dashboard/components/icons/dashboard-icons";
+import cardChip from "@/assets/chip.png";
 import type { WalletCard } from "@/features/dashboard/types";
 
-const walletCards: WalletCard[] = [
+type WalletCardConfig = WalletCard & {
+  shadow: string;
+  stackClass?: string;
+  cornerAccent?: "mastercard";
+  numberTracking?: string;
+  expiryMutedColor?: string;
+  opacity?: string;
+};
+
+const walletCards: WalletCardConfig[] = [
   {
     id: "primary",
     bank: "Universal Bank",
     number: "5495 7381 3759 2321",
-    expiry: "08/27",
-    brand: "visa",
+    expiry: "",
+    brand: "mastercard",
     background:
-      "bg-gradient-to-br from-[#1b1d22] via-[#191b20] to-[#0f1014] text-white shadow-[0_20px_50px_rgba(15,16,20,0.45)]",
+      "bg-gradient-to-br from-[#2b2d33] via-[#191b20] to-[#0f1116] text-white",
     textColor: "text-white",
-    accentColor: "text-white/60",
-    chipBg: "bg-[#c8c2bb]",
-    contactlessColor: "text-white/60",
+    accentColor: "text-[#626260]",
+    chipBg: "bg-[#c8c2bb]/90",
+    contactlessColor: "text-[#363B41]",
+    shadow: "shadow-[0_20px_55px_rgba(12,13,15,0.5)]",
+    numberTracking: "tracking-[0.32em]",
   },
   {
     id: "secondary",
     bank: "Commercial Bank",
-    number: "8595 2548 ****",
+    number: "85952548****",
     expiry: "09/25",
-    brand: "mastercard",
+    brand: "visa",
     background:
-      "bg-gradient-to-b from-[#d9d6d2] via-white to-white text-[#0f172a] shadow-[0_25px_40px_rgba(29,33,45,0.12)]",
+      "bg-gradient-to-b from-[#cfcac4] via-[#f5f3f0] to-[#fbfbfa] text-[#0f172a]",
     textColor: "text-[#0f172a]",
-    accentColor: "text-[#7d869c]",
+    accentColor: "text-[#F5F5F5]",
     chipBg: "bg-[#bfbab3]",
     contactlessColor: "text-[#4b5563]",
+    shadow: "shadow-[0_28px_36px_rgba(17,24,39,0.15)]",
+    stackClass: "-mt-14 ml-4 mr-4",
+    numberTracking: "tracking-[0.22em]",
+    expiryMutedColor: "text-[#7f889f]",
+    opacity: "opacity-70",
   },
 ];
 
@@ -39,56 +53,106 @@ const WalletPanel = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-slate-500">Wallet</p>
-          <p className="text-2xl font-semibold">Active cards</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-slate-900" />
-          <span className="h-1.5 w-1.5 rounded-full bg-slate-200" />
-          <span className="h-1.5 w-1.5 rounded-full bg-slate-200" />
+    <section className="rounded-3xl bg-transparent">
+      <div className="flex items-start justify-between px-2">
+        <p className="text-[18px] font-semibold leading-tight text-[#0c142c]">
+          Wallet
+        </p>
+        <div className="mt-2 flex items-center gap-2">
+          <ThreeDotsIcon />
         </div>
       </div>
-      <div className="mt-6 flex flex-col gap-4">
+      <div className="relative mt-6 flex flex-col gap-0">
         {walletCards.map((card, index) => (
           <article
             key={card.id}
-            className={`overflow-hidden rounded-[32px] p-6 transition ${
-              card.background
-            } ${index === 1 ? "ml-6" : ""}`}
+            className={`relative overflow-hidden rounded-[15px] px-[30px] py-[18px] transition ${
+              card.shadow
+            } ${card.stackClass ?? ""} ${
+              card.id === "primary"
+                ? "max-w-[354px] max-h-[210px]"
+                : "max-w-[324px] max-h-[172px]"
+            }`}
+            style={{
+              zIndex: index + 1,
+              fontFamily: "Gordita, system-ui, sans-serif",
+              ...(card.id === "secondary"
+                ? {
+                    borderImageSource:
+                      "linear-gradient(114.49deg, rgba(255, 255, 255, 0.4) -41.08%, rgba(255, 255, 255, 0.1) 104.09%)",
+                  }
+                : {}),
+            }}
           >
-            <div className="flex items-center justify-between">
-              <div
-                className={`flex items-center gap-3 text-lg font-semibold ${card.textColor}`}
-              >
-                <span>Maglo.</span>
-                <span className="text-base font-normal text-white/60">|</span>
-                <span className={`text-sm font-medium ${card.accentColor}`}>
-                  {card.bank}
-                </span>
-              </div>
-              <ContactlessIcon className={card.contactlessColor} />
-            </div>
-            <div className="mt-8 flex items-center gap-3">
-              <span
-                className={`flex h-10 w-10 items-center justify-center rounded-lg ${card.chipBg} text-slate-700`}
-              >
-                <CardChipIcon />
-              </span>
-            </div>
             <div
-              className={`mt-6 space-y-2 text-xl font-semibold tracking-[0.3em] ${card.textColor}`}
-            >
-              <p>{card.number}</p>
-            </div>
-            <div className="mt-6 flex items-center justify-between text-sm font-semibold">
-              <div className={`flex flex-col ${card.accentColor}`}>
-                <span className="text-xs">Valid thru</span>
-                <span className={card.textColor}>{card.expiry}</span>
+              className={`absolute inset-0 ${
+                card.id === "primary"
+                  ? ""
+                  : card.id === "secondary"
+                  ? "bg-white"
+                  : card.background
+              } ${card.opacity ?? ""}`}
+              style={
+                card.id === "primary"
+                  ? {
+                      background:
+                        "linear-gradient(104.3deg, #4A4A49 2.66%, #20201F 90.57%)",
+                    }
+                  : undefined
+              }
+            />
+            <div className="relative z-10">
+              <div className="flex items-center justify-between">
+                <div
+                  className={`flex items-center gap-3 text-[16px] font-semibold ${card.textColor}`}
+                >
+                  <span>Maglo.</span>
+                  <span className={`text-base font-normal ${card.accentColor}`}>
+                    |
+                  </span>
+                  <span
+                    className={`text-[12px] font-medium ${card.accentColor}`}
+                  >
+                    {card.bank}
+                  </span>
+                </div>
+                {card.cornerAccent === "mastercard" ? (
+                  <SoftMastercardMark />
+                ) : null}
               </div>
-              {card.brand === "visa" ? <VisaBadge /> : <MastercardBadge />}
+              <div className="mt-[13px] flex items-center gap-3 justify-between">
+                <img
+                  src={cardChip}
+                  alt="card-chip"
+                  className="w-[36px] h-[30px]"
+                />
+                <ContactlessIcon className={card.contactlessColor} />
+              </div>
+              <>
+                <p
+                  className={`mt-6 text-[16px] font-black ${card.numberTracking} ${card.textColor}`}
+                >
+                  {card.number}
+                </p>
+                <div className="flex items-center">
+                  {card.expiry && (
+                    <span
+                      className={`text-sm font-semibold ${
+                        card.expiryMutedColor ?? card.accentColor
+                      }`}
+                    >
+                      {card.expiry}
+                    </span>
+                  )}
+                  <div className="ml-auto">
+                    {card.brand === "visa" ? (
+                      <VisaBadge />
+                    ) : (
+                      <MastercardBadge />
+                    )}
+                  </div>
+                </div>
+              </>
             </div>
           </article>
         ))}
@@ -98,16 +162,78 @@ const WalletPanel = () => {
 };
 
 const VisaBadge = () => (
-  <span className="rounded-lg bg-[#1a1f71] px-3 py-1 text-xs font-semibold text-white">
-    VISA
-  </span>
+  <svg
+    width="32"
+    height="21"
+    viewBox="0 0 32 21"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <path
+      d="M27.4306 11.7852H25.5139C25.6435 11.4479 25.9491 10.6322 26.4306 9.33789L26.4722 9.21484C26.5093 9.1237 26.5556 9.00521 26.6111 8.85938C26.6667 8.71354 26.7083 8.59505 26.7361 8.50391L26.9028 9.25586L27.4306 11.7852ZM7.375 10.8965L6.56944 6.86328C6.46759 6.37109 6.12037 6.125 5.52778 6.125H1.80556L1.77778 6.30273C4.65741 7.02279 6.52315 8.55404 7.375 10.8965ZM9.86111 6.125L7.61111 12.1133L7.375 10.8965C7.13426 10.2585 6.74074 9.66829 6.19444 9.12598C5.64815 8.58366 5.04167 8.18034 4.375 7.91602L6.25 14.8887H8.68056L12.3056 6.125H9.86111ZM11.7917 14.9023H14.0972L15.5417 6.125H13.2361L11.7917 14.9023ZM22.4583 6.34375C21.8194 6.09766 21.1296 5.97461 20.3889 5.97461C19.25 5.97461 18.3194 6.24349 17.5972 6.78125C16.875 7.31901 16.5093 8.01628 16.5 8.87305C16.4907 9.80273 17.162 10.5957 18.5139 11.252C18.9583 11.4616 19.2685 11.6484 19.4444 11.8125C19.6204 11.9766 19.7083 12.1543 19.7083 12.3457C19.7083 12.6191 19.5694 12.8288 19.2917 12.9746C19.0139 13.1204 18.6944 13.1934 18.3333 13.1934C17.537 13.1934 16.8148 13.043 16.1667 12.7422L15.8611 12.5918L15.5417 14.5605C16.2269 14.8704 17.0833 15.0254 18.1111 15.0254C19.3148 15.0345 20.2801 14.7656 21.0069 14.2188C21.7338 13.6719 22.1065 12.9427 22.125 12.0312C22.125 11.0651 21.4769 10.2721 20.1806 9.65234C19.7269 9.42448 19.3981 9.23307 19.1944 9.07812C18.9907 8.92318 18.8889 8.75 18.8889 8.55859C18.8889 8.35807 19.0023 8.18262 19.2292 8.03223C19.456 7.88184 19.7824 7.80664 20.2083 7.80664C20.8565 7.79753 21.4306 7.9069 21.9306 8.13477L22.1389 8.24414L22.4583 6.34375ZM28.3611 6.125H26.5833C25.9815 6.125 25.5787 6.37109 25.375 6.86328L21.9583 14.9023H24.375L24.8611 13.5898H27.8056C27.8519 13.7904 27.9444 14.2279 28.0833 14.9023H30.2222L28.3611 6.125ZM32 1.75V19.25C32 19.724 31.8241 20.1341 31.4722 20.4805C31.1204 20.8268 30.7037 21 30.2222 21H1.77778C1.2963 21 0.87963 20.8268 0.527778 20.4805C0.175926 20.1341 0 19.724 0 19.25V1.75C0 1.27604 0.175926 0.865885 0.527778 0.519531C0.87963 0.173177 1.2963 0 1.77778 0H30.2222C30.7037 0 31.1204 0.173177 31.4722 0.519531C31.8241 0.865885 32 1.27604 32 1.75Z"
+      fill="#1A1F71"
+    />
+  </svg>
 );
 
 const MastercardBadge = () => (
-  <div className="flex items-center gap-1 rounded-lg bg-white/70 px-3 py-1">
-    <span className="h-4 w-4 rounded-full bg-[#eb001b]" />
-    <span className="h-4 w-4 -ml-2 rounded-full bg-[#f79e1b] opacity-90" />
+  <svg
+    width="47"
+    height="36"
+    viewBox="0 0 47 36"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="blur-[3px]"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M13.2768 32.0955V33.9999V35.9042H12.4383V35.4418C12.1723 35.7848 11.7688 36 11.2202 36C10.1388 36 9.29109 35.1636 9.29109 33.9999C9.29109 32.837 10.1388 31.9997 11.2202 31.9997C11.7688 31.9997 12.1723 32.215 12.4383 32.5579V32.0955H13.2768ZM11.3246 32.7804C10.5987 32.7804 10.1545 33.3304 10.1545 33.9999C10.1545 34.6693 10.5987 35.2193 11.3246 35.2193C12.0181 35.2193 12.4863 34.693 12.4863 33.9999C12.4863 33.3067 12.0181 32.7804 11.3246 32.7804ZM41.6126 33.9999C41.6126 33.3304 42.0567 32.7804 42.7826 32.7804C43.477 32.7804 43.9443 33.3067 43.9443 33.9999C43.9443 34.693 43.477 35.2193 42.7826 35.2193C42.0567 35.2193 41.6126 34.6693 41.6126 33.9999ZM44.7357 30.566V33.9999V35.9042H43.8963V35.4418C43.6303 35.7848 43.2268 36 42.6782 36C41.5969 36 40.7491 35.1636 40.7491 33.9999C40.7491 32.837 41.5969 31.9997 42.6782 31.9997C43.2268 31.9997 43.6303 32.215 43.8963 32.5579V30.566H44.7357ZM23.6852 32.7412C24.2255 32.7412 24.5727 33.076 24.6613 33.6651H22.6602C22.7497 33.1152 23.0877 32.7412 23.6852 32.7412ZM21.781 33.9999C21.781 32.8124 22.5715 31.9997 23.7018 31.9997C24.7823 31.9997 25.5248 32.8124 25.5331 33.9999C25.5331 34.1111 25.5248 34.2151 25.5165 34.3182H22.6528C22.7737 35.004 23.266 35.2512 23.8062 35.2512C24.1931 35.2512 24.605 35.1071 24.9282 34.8526L25.3391 35.4664C24.8709 35.8568 24.339 36 23.7582 36C22.6038 36 21.781 35.2111 21.781 33.9999ZM33.8268 33.9999C33.8268 33.3304 34.271 32.7804 34.9968 32.7804C35.6903 32.7804 36.1585 33.3067 36.1585 33.9999C36.1585 34.693 35.6903 35.2193 34.9968 35.2193C34.271 35.2193 33.8268 34.6693 33.8268 33.9999ZM36.949 32.0955V33.9999V35.9042H36.1105V35.4418C35.8437 35.7848 35.441 36 34.8925 36C33.8111 36 32.9633 35.1636 32.9633 33.9999C32.9633 32.837 33.8111 31.9997 34.8925 31.9997C35.441 31.9997 35.8437 32.215 36.1105 32.5579V32.0955H36.949ZM29.0912 33.9999C29.0912 35.1554 29.9057 36 31.1487 36C31.7295 36 32.1164 35.8723 32.5357 35.5458L32.1331 34.8764C31.8182 35.0998 31.4876 35.2193 31.1237 35.2193C30.4542 35.2111 29.962 34.7332 29.962 33.9999C29.962 33.2666 30.4542 32.7887 31.1237 32.7805C31.4876 32.7805 31.8182 32.8999 32.1331 33.1234L32.5357 32.4539C32.1164 32.1274 31.7295 31.9997 31.1487 31.9997C29.9057 31.9997 29.0912 32.8443 29.0912 33.9999ZM38.8854 32.5579C39.1033 32.2232 39.4183 31.9997 39.9021 31.9997C40.0721 31.9997 40.314 32.0317 40.4996 32.1037L40.2411 32.8844C40.0638 32.8124 39.8864 32.7887 39.7165 32.7887C39.168 32.7887 38.8937 33.1389 38.8937 33.7691V35.9042H38.0543V32.0955H38.8854V32.5579ZM17.424 32.3983C17.0205 32.1356 16.4645 31.9997 15.8514 31.9997C14.8743 31.9997 14.2454 32.4621 14.2454 33.2191C14.2454 33.8403 14.7136 34.2233 15.5762 34.3428L15.9723 34.3984C16.4322 34.4623 16.6492 34.5818 16.6492 34.797C16.6492 35.0916 16.3426 35.2594 15.7701 35.2594C15.1892 35.2594 14.77 35.0761 14.4874 34.8608L14.0921 35.5057C14.552 35.8404 15.1329 36 15.7618 36C16.8755 36 17.521 35.482 17.521 34.7569C17.521 34.0874 17.0131 33.7372 16.1736 33.6177L15.7784 33.5612C15.4155 33.5137 15.1246 33.4426 15.1246 33.1872C15.1246 32.9081 15.3989 32.7412 15.8587 32.7412C16.351 32.7412 16.8275 32.9246 17.0611 33.0677L17.424 32.3983ZM27.2277 32.5579C27.4447 32.2232 27.7596 31.9997 28.2435 31.9997C28.4134 31.9997 28.6553 32.0317 28.841 32.1037L28.5824 32.8844C28.4051 32.8124 28.2278 32.7887 28.0579 32.7887C27.5093 32.7887 27.235 33.1389 27.235 33.7691V35.9042H26.3965V32.0955H27.2277V32.5579ZM21.0873 32.0955H19.716V30.9399H18.8682V32.0955H18.0861V32.8525H18.8682V34.59C18.8682 35.4737 19.2155 36 20.2073 36C20.5711 36 20.9904 35.8887 21.2563 35.7054L21.0144 34.9958C20.7641 35.139 20.4899 35.2111 20.2719 35.2111C19.8527 35.2111 19.716 34.9557 19.716 34.5735V32.8525H21.0873V32.0955ZM8.54949 33.5137V35.9042H7.70174V33.7846C7.70174 33.1389 7.42747 32.7805 6.85492 32.7805C6.29807 32.7805 5.91114 33.1316 5.91114 33.7928V35.9042H5.06339V33.7846C5.06339 33.1389 4.78173 32.7805 4.22488 32.7805C3.65141 32.7805 3.28017 33.1316 3.28017 33.7928V35.9042H2.43335L2.43335 32.0955H3.27278V32.5652C3.58769 32.1192 3.99032 31.9997 4.40219 31.9997C4.99136 31.9997 5.41062 32.2551 5.67657 32.6774C6.03211 32.1429 6.54002 31.9915 7.03223 31.9997C7.96863 32.0079 8.54949 32.6136 8.54949 33.5137Z"
+      fill="white"
+    />
+    <path d="M29.8548 25.6237H17.146V3.06677H29.8548V25.6237Z" fill="#FF5F00" />
+    <path
+      d="M17.9523 14.3457C17.9523 9.7699 20.1215 5.69393 23.4995 3.06722C21.0293 1.14644 17.9116 -1.33514e-05 14.5234 -1.33514e-05C6.50215 -1.33514e-05 0 6.42266 0 14.3457C0 22.2687 6.50215 28.6913 14.5234 28.6913C17.9116 28.6913 21.0293 27.5449 23.4995 25.6241C20.1215 22.9974 17.9523 18.9214 17.9523 14.3457Z"
+      fill="#EB001B"
+    />
+    <path
+      d="M47 14.3457C47 22.2687 40.4978 28.6913 32.4766 28.6913C29.0884 28.6913 25.9707 27.5449 23.4995 25.6241C26.8785 22.9974 29.0477 18.9214 29.0477 14.3457C29.0477 9.7699 26.8785 5.69393 23.4995 3.06722C25.9707 1.14644 29.0884 -1.33514e-05 32.4766 -1.33514e-05C40.4978 -1.33514e-05 47 6.42266 47 14.3457Z"
+      fill="#F79E1B"
+    />
+  </svg>
+);
+
+const SoftMastercardMark = () => (
+  <div className="relative flex h-10 w-14 items-center justify-end">
+    <span className="absolute right-1 h-10 w-10 rounded-full bg-[#f79e1b] blur-[2px] opacity-80" />
+    <span className="absolute right-4 h-10 w-10 rounded-full bg-[#eb001b] blur-[2px] opacity-90" />
+    <span className="h-6 w-6 rounded-full bg-[#eb001b]" />
+    <span className="h-6 w-6 -ml-2 rounded-full bg-[#f79e1b] opacity-90" />
   </div>
+);
+
+const ThreeDotsIcon = () => (
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 22 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+  >
+    <g clipPath="url(#clip0_3210_423)">
+      <path
+        d="M4.50008 9.16666C3.48716 9.16666 2.66675 9.98708 2.66675 11C2.66675 12.0129 3.48716 12.8333 4.50008 12.8333C5.513 12.8333 6.33341 12.0129 6.33341 11C6.33341 9.98708 5.513 9.16666 4.50008 9.16666ZM17.5001 9.16666C16.4872 9.16666 15.6667 9.98708 15.6667 11C15.6667 12.0129 16.4872 12.8333 17.5001 12.8333C18.513 12.8333 19.3334 12.0129 19.3334 11C19.3334 9.98708 18.513 9.16666 17.5001 9.16666ZM11.0001 9.16666C9.98716 9.16666 9.16675 9.98708 9.16675 11C9.16675 12.0129 9.98716 12.8333 11.0001 12.8333C12.013 12.8333 12.8334 12.0129 12.8334 11C12.8334 9.98708 12.013 9.16666 11.0001 9.16666Z"
+        fill="#929EAE"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_3210_423">
+        <rect width="22" height="22" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
 );
 
 export { WalletPanel };

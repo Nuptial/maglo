@@ -51,14 +51,14 @@ const statStyleMap: Record<
     icon: <WalletFilledIcon />,
   },
   spending: {
-    card: "bg-[#fafafa] text-[#0f172a] border border-[#eceef3]",
+    card: "bg-[#fafafa] text-[#0f172a]",
     label: "text-[#9ea5b7]",
     value: "text-[#0f172a]",
     iconBg: "bg-[#ede9e8] text-[#2b2f38]",
     icon: <WalletMinimalIcon />,
   },
   saved: {
-    card: "bg-[#fafafa] text-[#0f172a] border border-[#eceef3]",
+    card: "bg-[#fafafa] text-[#0f172a]",
     label: "text-[#9ea5b7]",
     value: "text-[#0f172a]",
     iconBg: "bg-[#efe9e5] text-[#2b2f38]",
@@ -74,21 +74,21 @@ const StatGrid = () => {
   return (
     <section
       aria-label="Key performance indicators"
-      className="grid gap-4 md:grid-cols-2 xl:grid-cols-3"
+      className="max-h-[105px] grid gap-4 md:grid-cols-2 xl:grid-cols-3"
     >
       {stats.map((stat) => {
         const style = statStyleMap[stat.id];
         return (
           <article
             key={stat.id}
-            className={`flex items-center gap-4 rounded-[28px] p-6 ${style.card}`}
+            className={`flex items-center gap-[15px] rounded-[10px] py-6 px-5 ${style.card}`}
           >
             <span
               className={`flex h-12 w-12 items-center justify-center rounded-full ${style.iconBg}`}
             >
               {style.icon}
             </span>
-            <div>
+            <div className="flex flex-col gap-[10px]">
               <p className={`text-sm font-medium ${style.label}`}>
                 {stat.label}
               </p>

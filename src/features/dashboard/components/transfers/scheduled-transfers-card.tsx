@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import type { ScheduledTransfer } from "@/features/dashboard/types";
 
 const scheduledTransfers: ScheduledTransfer[] = [
@@ -37,27 +36,29 @@ const ScheduledTransfersCard = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white p-6">
+    <section>
       <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-slate-500">Scheduled</p>
-          <p className="text-2xl font-semibold">Transfers</p>
-        </div>
-        <Button
-          variant="ghost"
-          className="w-auto px-3 py-2 text-xs text-slate-500"
+        <span className="text-[18px] font-semibold">Scheduled Transfers</span>
+        <button
+          type="button"
+          className="flex items-center gap-2 text-sm font-semibold text-emerald-600"
         >
-          View all
-        </Button>
+          View All
+          <span aria-hidden>›</span>
+        </button>
       </div>
       <div className="mt-6 space-y-4">
-        {scheduledTransfers.map((transfer) => (
+        {scheduledTransfers.map((transfer, index) => (
           <article
             key={transfer.id}
-            className="flex items-center justify-between rounded-2xl border border-slate-100 px-4 py-3"
+            className={`flex items-center justify-between px-4 py-3 w-full ${
+              index !== scheduledTransfers.length - 1
+                ? "border-b border-[rgba(250,250,250,1)]"
+                : ""
+            }`}
           >
             <div className="flex items-center gap-4">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600">
+              <span className="flex h-10 w-10 items-center justify-center bg-slate-100 text-sm font-semibold text-slate-600">
                 {transfer.recipient
                   .split(" ")
                   .map((part) => part[0])
@@ -68,7 +69,6 @@ const ScheduledTransfersCard = () => {
                 <p className="text-sm font-semibold text-slate-900">
                   {transfer.recipient}
                 </p>
-                <p className="text-xs text-slate-500">{transfer.bank}</p>
                 <p className="text-xs text-slate-400">{transfer.timeLabel}</p>
               </div>
             </div>
@@ -82,7 +82,6 @@ const ScheduledTransfersCard = () => {
               >
                 {transfer.amount}
               </p>
-              <span className="text-xs text-slate-400">{transfer.status}</span>
             </div>
           </article>
         ))}

@@ -46,7 +46,7 @@ const WorkingCapitalCard = () => {
       : undefined;
 
   return (
-    <section className="rounded-3xl bg-white p-6 shadow-sm">
+    <section className="max-h-[291px] rounded-3xl bg-white px-[25px] pt-[15px] pb-[21px] shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <p className="text-2xl font-semibold text-slate-900">Working Capital</p>
         <div className="flex flex-wrap items-center gap-4 text-sm font-semibold text-slate-500">
@@ -61,11 +61,11 @@ const WorkingCapitalCard = () => {
           </button>
         </div>
       </div>
-      <div className="mt-6 h-80">
+      <div className="mt-[32px] h-[193px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={workingCapitalData}
-            margin={{ top: 10, right: 24, left: 0, bottom: 0 }}
+            margin={{ top: 10, right: 24, left: 0, bottom: 20 }}
           >
             <defs>
               <linearGradient
@@ -90,13 +90,14 @@ const WorkingCapitalCard = () => {
               axisLine={false}
               tickLine={false}
               tick={{ fill: "#94a3b8", fontSize: 12 }}
-              dy={10}
+              interval={0}
+              tickMargin={8}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
               tickFormatter={(value) => `${Math.round(value / 1000)}K`}
-              tick={{ fill: "#94a3b8", fontSize: 12 }}
+              tick={{ fill: "#94a3b8", fontSize: 12, dx: -26 }}
               ticks={[0, 3000, 5000, 7000, 10000]}
               domain={[0, 10000]}
             />
