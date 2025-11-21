@@ -55,23 +55,21 @@ const WalletPanel = () => {
   return (
     <section className="rounded-3xl bg-transparent">
       <div className="flex items-start justify-between px-2">
-        <p className="text-[18px] font-semibold leading-tight text-[#0c142c]">
+        <p className="text-lg font-semibold leading-tight text-[#0c142c] sm:text-xl">
           Wallet
         </p>
         <div className="mt-2 flex items-center gap-2">
           <ThreeDotsIcon />
         </div>
       </div>
-      <div className="relative mt-6 flex flex-col gap-0">
+      <div className="relative mt-6 flex flex-col gap-0 justify-center items-center">
         {walletCards.map((card, index) => (
           <article
             key={card.id}
-            className={`relative overflow-hidden rounded-[15px] px-[30px] py-[18px] transition ${
+            className={`relative w-full max-w-sm overflow-hidden rounded-2xl px-6 py-4 transition ${
               card.shadow
             } ${card.stackClass ?? ""} ${
-              card.id === "primary"
-                ? "max-w-[354px] max-h-[210px]"
-                : "max-w-[324px] max-h-[172px]"
+              card.id === "primary" ? "sm:max-w-md" : "sm:max-w-sm"
             }`}
             style={{
               zIndex: index + 1,
@@ -104,15 +102,13 @@ const WalletPanel = () => {
             <div className="relative z-10">
               <div className="flex items-center justify-between">
                 <div
-                  className={`flex items-center gap-3 text-[16px] font-semibold ${card.textColor}`}
+                  className={`flex items-center gap-3 text-base font-semibold ${card.textColor}`}
                 >
                   <span>Maglo.</span>
                   <span className={`text-base font-normal ${card.accentColor}`}>
                     |
                   </span>
-                  <span
-                    className={`text-[12px] font-medium ${card.accentColor}`}
-                  >
+                  <span className={`text-xs font-medium ${card.accentColor}`}>
                     {card.bank}
                   </span>
                 </div>
@@ -120,17 +116,13 @@ const WalletPanel = () => {
                   <SoftMastercardMark />
                 ) : null}
               </div>
-              <div className="mt-[13px] flex items-center gap-3 justify-between">
-                <img
-                  src={cardChip}
-                  alt="card-chip"
-                  className="w-[36px] h-[30px]"
-                />
+              <div className="mt-4 flex items-center justify-between gap-3">
+                <img src={cardChip} alt="card-chip" className="h-8 w-9" />
                 <ContactlessIcon className={card.contactlessColor} />
               </div>
               <>
                 <p
-                  className={`mt-6 text-[16px] font-black ${card.numberTracking} ${card.textColor}`}
+                  className={`mt-6 text-base font-black ${card.numberTracking} ${card.textColor}`}
                 >
                   {card.number}
                 </p>
@@ -184,7 +176,7 @@ const MastercardBadge = () => (
     viewBox="0 0 47 36"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className="blur-[3px]"
+    className="blur-sm"
   >
     <path
       fill-rule="evenodd"
@@ -206,8 +198,8 @@ const MastercardBadge = () => (
 
 const SoftMastercardMark = () => (
   <div className="relative flex h-10 w-14 items-center justify-end">
-    <span className="absolute right-1 h-10 w-10 rounded-full bg-[#f79e1b] blur-[2px] opacity-80" />
-    <span className="absolute right-4 h-10 w-10 rounded-full bg-[#eb001b] blur-[2px] opacity-90" />
+    <span className="absolute right-1 h-10 w-10 rounded-full bg-[#f79e1b] blur-sm opacity-80" />
+    <span className="absolute right-4 h-10 w-10 rounded-full bg-[#eb001b] blur-sm opacity-90" />
     <span className="h-6 w-6 rounded-full bg-[#eb001b]" />
     <span className="h-6 w-6 -ml-2 rounded-full bg-[#f79e1b] opacity-90" />
   </div>

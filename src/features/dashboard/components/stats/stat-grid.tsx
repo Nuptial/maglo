@@ -74,21 +74,21 @@ const StatGrid = () => {
   return (
     <section
       aria-label="Key performance indicators"
-      className="max-h-[105px] grid gap-4 md:grid-cols-2 xl:grid-cols-3"
+      className="grid gap-4 md:grid-cols-2 xl:grid-cols-3"
     >
       {stats.map((stat) => {
         const style = statStyleMap[stat.id];
         return (
           <article
             key={stat.id}
-            className={`flex items-center gap-[15px] rounded-[10px] py-6 px-5 ${style.card}`}
+            className={`flex items-center gap-4 rounded-2xl px-5 py-6 ${style.card}`}
           >
             <span
               className={`flex h-12 w-12 items-center justify-center rounded-full ${style.iconBg}`}
             >
               {style.icon}
             </span>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex flex-col gap-2">
               <p className={`text-sm font-medium ${style.label}`}>
                 {stat.label}
               </p>

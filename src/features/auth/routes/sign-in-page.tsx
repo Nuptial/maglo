@@ -31,78 +31,87 @@ const SignInPage = () => {
   };
 
   return (
-    <SplitPanel
-      left={
-        <div className="flex h-full flex-col" aria-label="Maglo sign in panel">
-          <Logo />
-          <div className="flex flex-1 flex-col justify-center space-y-10">
-            <div className="space-y-2">
-              <h1 className="text-4xl font-semibold text-slate-900">Sign In</h1>
-              <p className="text-base text-slate-500">
-                Welcome back! Please enter your details.
-              </p>
-            </div>
-            <form
-              className="space-y-6"
-              onSubmit={handleSubmit}
-              aria-label="Sign in form"
+    <div className="h-screen overflow-hidden">
+      <div className="h-full">
+        <SplitPanel
+          left={
+            <div
+              className="flex h-full flex-col overflow-hidden"
+              aria-label="Maglo sign in panel"
             >
-              <TextField
-                id="email"
-                label="Email"
-                name="email"
-                type="email"
-                placeholder="example@gmail.com"
-                autoComplete="email"
-                required
-                value={formValues.email}
-                onChange={handleInputChange}
-              />
-              <TextField
-                id="password"
-                label="Password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                autoComplete="current-password"
-                required
-                value={formValues.password}
-                onChange={handleInputChange}
-              />
-              <Button type="submit">Sign In</Button>
-              <Button
-                type="button"
-                variant="outline"
-                leftIcon={<GoogleIcon />}
-                onClick={handleGoogleSignIn}
-                className="text-[#78778B]"
-              >
-                Sign in with google
-              </Button>
-            </form>
-            <div className="flex items-center justify-center text-sm text-slate-500">
-              <span>Don&apos;t have an account?</span>
-              <div className="flex flex-col items-center mt-[8px]">
-                <button
-                  type="button"
-                  className="font-semibold text-slate-900"
-                  onClick={() => navigate({ to: "/sign-up" })}
+              <Logo />
+              <div className="flex flex-1 flex-col justify-center space-y-10">
+                <div className="space-y-2">
+                  <h1 className="text-4xl font-semibold text-slate-900">
+                    Sign In
+                  </h1>
+                  <p className="text-base text-slate-500">
+                    Welcome back! Please enter your details.
+                  </p>
+                </div>
+                <form
+                  className="space-y-6"
+                  onSubmit={handleSubmit}
+                  aria-label="Sign in form"
                 >
-                  Sign up
-                </button>
-                <img
-                  src={underlineVector}
-                  alt=""
-                  aria-hidden
-                  className="h-2 w-16 object-contain"
-                />
+                  <TextField
+                    id="email"
+                    label="Email"
+                    name="email"
+                    type="email"
+                    placeholder="example@gmail.com"
+                    autoComplete="email"
+                    required
+                    value={formValues.email}
+                    onChange={handleInputChange}
+                  />
+                  <TextField
+                    id="password"
+                    label="Password"
+                    name="password"
+                    type="password"
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                    required
+                    value={formValues.password}
+                    onChange={handleInputChange}
+                  />
+                  <Button type="submit">Sign In</Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    leftIcon={<GoogleIcon />}
+                    onClick={handleGoogleSignIn}
+                    className="text-[#78778B]"
+                  >
+                    Sign in with google
+                  </Button>
+                </form>
+                <div className="flex items-center justify-center text-sm text-slate-500">
+                  <span>Don&apos;t have an account?</span>
+                  <div className="flex flex-col items-center mt-[8px]">
+                    <button
+                      type="button"
+                      className="font-semibold text-slate-900"
+                      onClick={() => navigate({ to: "/sign-up" })}
+                    >
+                      Sign up
+                    </button>
+                    <img
+                      src={underlineVector}
+                      alt=""
+                      aria-hidden
+                      className="h-2 w-16 object-contain"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      }
-      right={<HeroPanel />}
-    />
+          }
+          right={<HeroPanel />}
+        />
+      </div>
+    </div>
   );
 };
 

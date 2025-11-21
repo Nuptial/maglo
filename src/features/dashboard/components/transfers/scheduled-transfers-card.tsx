@@ -36,9 +36,9 @@ const ScheduledTransfersCard = () => {
   }
 
   return (
-    <section>
-      <div className="flex items-center justify-between">
-        <span className="text-[18px] font-semibold">Scheduled Transfers</span>
+    <section className="rounded-3xl bg-white px-6 py-5 shadow-sm">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <span className="text-lg font-semibold">Scheduled Transfers</span>
         <button
           type="button"
           className="flex items-center gap-2 text-sm font-semibold text-emerald-600"
@@ -48,17 +48,13 @@ const ScheduledTransfersCard = () => {
         </button>
       </div>
       <div className="mt-6 space-y-4">
-        {scheduledTransfers.map((transfer, index) => (
+        {scheduledTransfers.map((transfer) => (
           <article
             key={transfer.id}
-            className={`flex items-center justify-between px-4 py-3 w-full ${
-              index !== scheduledTransfers.length - 1
-                ? "border-b border-[rgba(250,250,250,1)]"
-                : ""
-            }`}
+            className="flex flex-col gap-3 rounded-2xl border border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="flex items-center gap-4">
-              <span className="flex h-10 w-10 items-center justify-center bg-slate-100 text-sm font-semibold text-slate-600">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600">
                 {transfer.recipient
                   .split(" ")
                   .map((part) => part[0])

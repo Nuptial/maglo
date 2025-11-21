@@ -91,14 +91,14 @@ const DashboardSidebar = () => {
         onKeyDown={(event) =>
           handleKeyDown(event, () => handleNavClick(link.label))
         }
-        className={`flex w-full items-center gap-4 rounded-[18px] px-4 py-3 text-base font-semibold outline-none focus:outline-none focus-visible:outline-none ${
+        className={`flex w-full items-center gap-4 rounded-2xl px-4 py-3 text-base font-semibold outline-none focus:outline-none focus-visible:outline-none ${
           isActive
             ? "bg-[#ccff33] text-slate-900"
             : "text-slate-400 transition hover:text-slate-600"
         }`}
       >
         <span
-          className={`flex h-10 w-10 items-center justify-center${
+          className={`flex h-10 w-10 items-center justify-center ${
             isActive
               ? "bg-white/40 text-slate-900"
               : "bg-slate-100 text-slate-400"
@@ -112,13 +112,12 @@ const DashboardSidebar = () => {
   };
 
   return (
-    <aside className="hidden w-[250px] max-w-[250px] flex-col bg-[#fafaFA] px-[25px] pt-[30px] pb-[100px] lg:flex">
+    <aside className="hidden w-full max-w-xs flex-col bg-[#fafafa] px-6 py-10 lg:flex lg:max-w-sm lg:px-8 lg:py-12 xl:w-72">
       <div className="flex items-center gap-3">
         <Logo />
       </div>
-      <div className="mt-10">{primaryLinks.map(renderNavButton)}</div>
-      <div className="mt-auto">
-        <div className="h-px" />
+      <div className="mt-8 space-y-3">{primaryLinks.map(renderNavButton)}</div>
+      <div className="mt-auto space-y-3 border-t border-slate-100 pt-6">
         {secondaryLinks.map(renderNavButton)}
       </div>
     </aside>

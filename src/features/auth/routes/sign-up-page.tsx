@@ -32,9 +32,14 @@ const SignUpPage = () => {
   };
 
   return (
-    <SplitPanel
+    <div className="h-screen overflow-hidden">
+      <div className="h-full">
+        <SplitPanel
       left={
-        <div className="flex h-full flex-col" aria-label="Maglo sign in panel">
+        <div
+          className="flex h-full flex-col overflow-hidden"
+          aria-label="Maglo sign in panel"
+        >
           <Logo />
           <div className="flex flex-1 flex-col justify-center space-y-10">
             <div className="space-y-2">
@@ -115,8 +120,10 @@ const SignUpPage = () => {
           </div>
         </div>
       }
-      right={<HeroPanel />}
-    />
+          right={<HeroPanel />}
+        />
+      </div>
+    </div>
   );
 };
 

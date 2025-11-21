@@ -7,13 +7,13 @@ import { StatGrid } from "@/features/dashboard/components/stats/stat-grid";
 
 const DashboardPage = () => (
   <DashboardLayout>
-    <div className="grid gap-[39px] xl:grid-cols-[min(717px,100%)_min(354px,100%)]">
-      <div className="space-y-[30px] max-w-[717px]">
+    <div className="grid gap-8 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+      <div className="space-y-8">
         <StatGrid />
         <WorkingCapitalCard />
         <RecentTransactionsCard />
       </div>
-      <div className="space-y-[30px] max-w-[354px]">
+      <div className="space-y-8">
         <WalletPanel />
         <ScheduledTransfersCard />
       </div>

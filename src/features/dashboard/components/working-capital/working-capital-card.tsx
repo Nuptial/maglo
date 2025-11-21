@@ -46,7 +46,7 @@ const WorkingCapitalCard = () => {
       : undefined;
 
   return (
-    <section className="max-h-[291px] rounded-3xl bg-white px-[25px] pt-[15px] pb-[21px] shadow-sm">
+    <section className="rounded-3xl bg-white px-6 py-5 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <p className="text-2xl font-semibold text-slate-900">Working Capital</p>
         <div className="flex flex-wrap items-center gap-4 text-sm font-semibold text-slate-500">
@@ -61,7 +61,7 @@ const WorkingCapitalCard = () => {
           </button>
         </div>
       </div>
-      <div className="mt-[32px] h-[193px]">
+      <div className="mt-8 h-60">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={workingCapitalData}

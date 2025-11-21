@@ -9,12 +9,12 @@ type DashboardLayoutProps = {
 };
 
 const DashboardLayout = ({ children, sidebar }: DashboardLayoutProps) => (
-  <div className="flex h-full w-full bg-white text-slate-900">
+  <div className="flex w-full min-h-screen bg-white text-slate-900">
     {sidebar ?? <DashboardSidebar />}
     <div className="flex flex-1 flex-col overflow-hidden">
       <DashboardHeader />
-      <main className="flex-1 overflow-y-auto bg-white pb-[26px]">
-        <div className="w-full max-w-[1110px] pt-[30px] px-[40px]">
+      <main className="flex-1 overflow-y-auto bg-white pb-8 sm:pb-10">
+        <div className="w-full px-4 py-6 sm:px-6 lg:px-10">
           <div className="space-y-8">{children}</div>
         </div>
       </main>
