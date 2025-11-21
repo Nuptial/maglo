@@ -10,6 +10,11 @@ import {
 } from "@/features/dashboard/components/icons/dashboard-icons";
 import type { NavLink } from "@/features/dashboard/types";
 import type { KeyboardEvent } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { logoutUser } from "@/features/auth/api/logout";
+import { useAuth } from "@/features/auth/context/use-auth";
 
 const navItems: NavLink[] = [
   {
@@ -68,11 +73,30 @@ const handleKeyDown = (
   handler();
 };
 
-const handleNavClick = (label: string) => {
-  console.info(`Navigate to ${label}`);
-};
-
 const DashboardSidebar = () => {
+  const navigate = useNavigate();
+  const { clearAuth } = useAuth();
+  const { mutateAsync: logout, isPending: isLoggingOut } = useMutation({
+    mutationFn: logoutUser,
+  });
+
+  const handleNavClick = (label: string) => {
+    console.info(`Navigate to ${label}`);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      clearAuth();
+      toast.success("You have been logged out");
+      navigate({ to: "/sign-in" });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unable to logout";
+      toast.error(message);
+    }
+  };
+
   const primaryLinks = navItems.filter((link) => link.section !== "secondary");
   const secondaryLinks = navItems.filter(
     (link) => link.section === "secondary"
@@ -80,6 +104,9 @@ const DashboardSidebar = () => {
 
   const renderNavButton = (link: NavLink) => {
     const isActive = Boolean(link.isActive);
+    const isLogout = link.id === "logout";
+    const onSelect = isLogout ? handleLogout : () => handleNavClick(link.label);
+
     return (
       <button
         key={link.id}
@@ -87,10 +114,11 @@ const DashboardSidebar = () => {
         aria-current={isActive ? "page" : undefined}
         aria-label={link.label}
         tabIndex={0}
-        onClick={() => handleNavClick(link.label)}
-        onKeyDown={(event) =>
-          handleKeyDown(event, () => handleNavClick(link.label))
-        }
+        onClick={onSelect}
+        onKeyDown={(event) => handleKeyDown(event, onSelect)}
+        disabled={isLogout && isLoggingOut}
+        aria-disabled={isLogout && isLoggingOut}
+        aria-busy={isLogout && isLoggingOut}
         className={`flex w-full items-center gap-4 rounded-2xl px-4 py-3 text-base font-semibold outline-none focus:outline-none focus-visible:outline-none ${
           isActive
             ? "bg-[#ccff33] text-slate-900"

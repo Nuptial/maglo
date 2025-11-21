@@ -9,23 +9,79 @@ type DashboardStat = {
   trend: TrendDirection;
 };
 
+type FinancialSummary = {
+  totalBalance: {
+    amount: number;
+    currency: string;
+    change: {
+      percentage: number;
+      trend: TrendDirection;
+    };
+  };
+  totalExpense: {
+    amount: number;
+    currency: string;
+    change: {
+      percentage: number;
+      trend: TrendDirection;
+    };
+  };
+  totalSavings: {
+    amount: number;
+    currency: string;
+    change: {
+      percentage: number;
+      trend: TrendDirection;
+    };
+  };
+  lastUpdated: string;
+};
+
 type WorkingCapitalDatum = {
   dateLabel: string;
   income: number;
   expenses: number;
+  net: number;
   highlight?: boolean;
   displayValue?: string;
 };
 
+type WorkingCapitalApiDatum = {
+  month: string;
+  income: number;
+  expense: number;
+  net: number;
+};
+
+type WorkingCapitalSummary = {
+  totalIncome: number;
+  totalExpense: number;
+  netBalance: number;
+};
+
+type WorkingCapitalReport = {
+  period: string;
+  currency: string;
+  data: WorkingCapitalApiDatum[];
+  summary: WorkingCapitalSummary;
+};
+
 type RecentTransaction = {
   id: string;
-  title: string;
+  name: string;
   business: string;
+  image: string;
   type: string;
-  amount: string;
-  dateLabel: string;
-  logoUrl: string;
-  logoBg: string;
+  amount: number;
+  currency: string;
+  date: string;
+  status: string;
+};
+
+type RecentTransactionsSummary = {
+  totalIncome: number;
+  totalExpense: number;
+  count: number;
 };
 
 type WalletCard = {
@@ -41,14 +97,34 @@ type WalletCard = {
   contactlessColor: string;
 };
 
+type WalletCardApi = {
+  id: string;
+  name: string;
+  type: string;
+  cardNumber: string;
+  bank: string;
+  network: string;
+  expiryMonth: number;
+  expiryYear: number;
+  color: string;
+  isDefault: boolean;
+};
+
+type ScheduledTransferStatus = "scheduled" | "processing" | "completed";
+
 type ScheduledTransfer = {
   id: string;
-  recipient: string;
-  bank: string;
-  timeLabel: string;
-  amount: string;
-  direction: "in" | "out";
-  status: "Scheduled" | "Completed" | "Processing";
+  name: string;
+  image: string | null;
+  date: string;
+  amount: number;
+  currency: string;
+  status: ScheduledTransferStatus;
+};
+
+type ScheduledTransfersSummary = {
+  totalScheduledAmount: number;
+  count: number;
 };
 
 import type { ReactNode } from "react";
@@ -63,11 +139,18 @@ type NavLink = {
 
 export type {
   DashboardStat,
+  FinancialSummary,
   NavLink,
   RecentTransaction,
+  RecentTransactionsSummary,
   ScheduledTransfer,
+  ScheduledTransfersSummary,
   TrendDirection,
   WalletCard,
+  WalletCardApi,
+  WorkingCapitalApiDatum,
+  WorkingCapitalReport,
+  WorkingCapitalSummary,
   WorkingCapitalDatum,
 };
 

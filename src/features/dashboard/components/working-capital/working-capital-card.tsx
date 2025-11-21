@@ -30,7 +30,7 @@ const workingCapitalData: WorkingCapitalDatum[] = [
   { dateLabel: "Apr 20", income: 6600, expenses: 6900 },
 ];
 
-const WorkingCapitalCard = () => {
+const WorkingCapital = () => {
   const highlightIndex = workingCapitalData.findIndex(
     (point) => point.highlight
   );
@@ -188,4 +188,4 @@ const HighlightedDot = ({
   );
 };
 
-export { WorkingCapitalCard };
+export { WorkingCapital };

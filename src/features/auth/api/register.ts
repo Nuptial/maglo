@@ -23,6 +23,7 @@ const registerUser = async (payload: RegisterRequest) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
+    credentials: "include",
   });
 
   if (!response.ok) {

@@ -1,12 +1,8 @@
-import {
-  createRootRoute,
-  createRoute,
-  createRouter,
-} from "@tanstack/react-router";
+import { createRootRoute, createRoute, createRouter } from "@tanstack/react-router";
 import { SignInPage } from "./features/auth/routes/sign-in-page";
 import { RootLayout } from "./layouts/root-layout";
 import { SignUpPage } from "./features/auth/routes/sign-up-page";
-import { DashboardPage } from "./features/dashboard/routes/dashboard-page";
+import { ProtectedDashboardPage } from "./features/dashboard/routes/protected-dashboard-page";
 
 const rootRoute = createRootRoute({
   component: RootLayout,
@@ -27,7 +23,7 @@ const signUpRoute = createRoute({
 const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/dashboard",
-  component: DashboardPage,
+  component: ProtectedDashboardPage,
 });
 
 const routeTree = rootRoute.addChildren([

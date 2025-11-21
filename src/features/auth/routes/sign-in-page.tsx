@@ -32,7 +32,7 @@ const signInSchema = yup.object({
 
 const SignInPage = () => {
   const navigate = useNavigate();
-  const { setAuthData } = useAuth();
+  const { setAuthData, fetchProfile } = useAuth();
 
   const {
     register,
@@ -60,6 +60,7 @@ const SignInPage = () => {
     try {
       const data = await mutateAsync(values);
       setAuthData(data);
+      await fetchProfile(data.accessToken);
       toast.success("Login successful");
       navigate({ to: "/dashboard" });
     } catch (error) {

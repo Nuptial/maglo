@@ -1,157 +1,13 @@
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ContactlessIcon } from "@/features/dashboard/components/icons/dashboard-icons";
 import cardChip from "@/assets/chip.png";
-import type { WalletCard } from "@/features/dashboard/types";
-
-type WalletCardConfig = WalletCard & {
-  shadow: string;
-  stackClass?: string;
-  cornerAccent?: "mastercard";
-  numberTracking?: string;
-  expiryMutedColor?: string;
-  opacity?: string;
-};
-
-const walletCards: WalletCardConfig[] = [
-  {
-    id: "primary",
-    bank: "Universal Bank",
-    number: "5495 7381 3759 2321",
-    expiry: "",
-    brand: "mastercard",
-    background:
-      "bg-gradient-to-br from-[#2b2d33] via-[#191b20] to-[#0f1116] text-white",
-    textColor: "text-white",
-    accentColor: "text-[#626260]",
-    chipBg: "bg-[#c8c2bb]/90",
-    contactlessColor: "text-[#363B41]",
-    shadow: "shadow-[0_20px_55px_rgba(12,13,15,0.5)]",
-    numberTracking: "tracking-[0.32em]",
-  },
-  {
-    id: "secondary",
-    bank: "Commercial Bank",
-    number: "85952548****",
-    expiry: "09/25",
-    brand: "visa",
-    background:
-      "bg-gradient-to-b from-[#cfcac4] via-[#f5f3f0] to-[#fbfbfa] text-[#0f172a]",
-    textColor: "text-[#0f172a]",
-    accentColor: "text-[#F5F5F5]",
-    chipBg: "bg-[#bfbab3]",
-    contactlessColor: "text-[#4b5563]",
-    shadow: "shadow-[0_28px_36px_rgba(17,24,39,0.15)]",
-    stackClass: "-mt-14 ml-4 mr-4",
-    numberTracking: "tracking-[0.22em]",
-    expiryMutedColor: "text-[#7f889f]",
-    opacity: "opacity-70",
-  },
-];
-
-const WalletPanel = () => {
-  if (!walletCards.length) {
-    return null;
-  }
-
-  return (
-    <section className="rounded-3xl bg-transparent">
-      <div className="flex items-start justify-between px-2">
-        <p className="text-lg font-semibold leading-tight text-[#0c142c] sm:text-xl">
-          Wallet
-        </p>
-        <div className="mt-2 flex items-center gap-2">
-          <ThreeDotsIcon />
-        </div>
-      </div>
-      <div className="relative mt-6 flex flex-col gap-0 justify-center items-center">
-        {walletCards.map((card, index) => (
-          <article
-            key={card.id}
-            className={`relative w-full max-w-sm overflow-hidden rounded-2xl px-6 py-4 transition ${
-              card.shadow
-            } ${card.stackClass ?? ""} ${
-              card.id === "primary" ? "sm:max-w-md" : "sm:max-w-sm"
-            }`}
-            style={{
-              zIndex: index + 1,
-              fontFamily: "Gordita, system-ui, sans-serif",
-              ...(card.id === "secondary"
-                ? {
-                    borderImageSource:
-                      "linear-gradient(114.49deg, rgba(255, 255, 255, 0.4) -41.08%, rgba(255, 255, 255, 0.1) 104.09%)",
-                  }
-                : {}),
-            }}
-          >
-            <div
-              className={`absolute inset-0 ${
-                card.id === "primary"
-                  ? ""
-                  : card.id === "secondary"
-                  ? "bg-white"
-                  : card.background
-              } ${card.opacity ?? ""}`}
-              style={
-                card.id === "primary"
-                  ? {
-                      background:
-                        "linear-gradient(104.3deg, #4A4A49 2.66%, #20201F 90.57%)",
-                    }
-                  : undefined
-              }
-            />
-            <div className="relative z-10">
-              <div className="flex items-center justify-between">
-                <div
-                  className={`flex items-center gap-3 text-base font-semibold ${card.textColor}`}
-                >
-                  <span>Maglo.</span>
-                  <span className={`text-base font-normal ${card.accentColor}`}>
-                    |
-                  </span>
-                  <span className={`text-xs font-medium ${card.accentColor}`}>
-                    {card.bank}
-                  </span>
-                </div>
-                {card.cornerAccent === "mastercard" ? (
-                  <SoftMastercardMark />
-                ) : null}
-              </div>
-              <div className="mt-4 flex items-center justify-between gap-3">
-                <img src={cardChip} alt="card-chip" className="h-8 w-9" />
-                <ContactlessIcon className={card.contactlessColor} />
-              </div>
-              <>
-                <p
-                  className={`mt-6 text-base font-black ${card.numberTracking} ${card.textColor}`}
-                >
-                  {card.number}
-                </p>
-                <div className="flex items-center">
-                  {card.expiry && (
-                    <span
-                      className={`text-sm font-semibold ${
-                        card.expiryMutedColor ?? card.accentColor
-                      }`}
-                    >
-                      {card.expiry}
-                    </span>
-                  )}
-                  <div className="ml-auto">
-                    {card.brand === "visa" ? (
-                      <VisaBadge />
-                    ) : (
-                      <MastercardBadge />
-                    )}
-                  </div>
-                </div>
-              </>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-};
+import { useAuth } from "@/features/auth/context/use-auth";
+import { getWalletCards } from "@/features/dashboard/api/get-wallet-cards";
+import {
+  formatExpiry,
+  mapCardsToPresentation,
+} from "@/features/dashboard/utils/wallet-card-utils";
 
 const VisaBadge = () => (
   <svg
@@ -227,5 +83,149 @@ const ThreeDotsIcon = () => (
     </defs>
   </svg>
 );
+
+const WalletPanel = () => {
+  const { accessToken } = useAuth();
+  const resolvedToken = accessToken ?? "";
+
+  const { data, isPending, isError, refetch } = useQuery({
+    queryKey: ["wallet-cards", resolvedToken],
+    queryFn: () => getWalletCards(resolvedToken),
+    enabled: Boolean(resolvedToken),
+  });
+
+  const styledCards = useMemo(() => {
+    if (!data?.length) {
+      return [];
+    }
+
+    return mapCardsToPresentation(data);
+  }, [data]);
+
+  if (!resolvedToken || isPending) {
+    return (
+      <section className="rounded-3xl bg-transparent">
+        <div className="flex items-start justify-between px-2">
+          <span className="h-6 w-24 animate-pulse rounded-full bg-slate-100" />
+          <span className="h-6 w-6 animate-pulse rounded-full bg-slate-100" />
+        </div>
+        <div className="relative mt-6 flex flex-col items-center justify-center gap-4">
+          {Array.from({ length: 2 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-48 w-full max-w-sm animate-pulse rounded-2xl bg-slate-100 shadow-inner"
+            />
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <section className="rounded-3xl bg-white px-4 py-5 shadow-sm">
+        <div className="flex flex-col gap-3">
+          <p className="text-lg font-semibold text-[#0c142c]">Wallet</p>
+          <p className="text-sm text-slate-500">
+            We couldn’t load your cards right now. Please try again.
+          </p>
+          <button
+            type="button"
+            className="self-start rounded-full border border-emerald-600 px-4 py-2 text-sm font-semibold text-emerald-600"
+            onClick={() => refetch()}
+          >
+            Retry
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  if (!styledCards.length) {
+    return null;
+  }
+
+  return (
+    <section className="rounded-3xl bg-transparent">
+      <div className="flex items-start justify-between px-2">
+        <p className="text-lg font-semibold leading-tight text-[#0c142c] sm:text-xl">
+          Wallet
+        </p>
+        <div className="mt-2 flex items-center gap-2">
+          <ThreeDotsIcon />
+        </div>
+      </div>
+      <div className="relative mt-6 flex flex-col items-center justify-center gap-0">
+        {styledCards.map(({ card, presentation }, index) => (
+          <article
+            key={card.id}
+            className={`relative w-full max-w-sm overflow-hidden rounded-2xl px-6 py-4 transition ${
+              presentation.shadow
+            } ${presentation.stackClass ?? ""} ${
+              index === 0 ? "sm:max-w-md" : "sm:max-w-sm"
+            }`}
+            style={{
+              zIndex: index + 1,
+              fontFamily: "Gordita, system-ui, sans-serif",
+            }}
+          >
+            <div
+              className="absolute inset-0"
+              style={presentation.backgroundStyle}
+            />
+            <div className="relative z-10">
+              <div className="flex items-start justify-between">
+                <div className={`flex flex-col ${presentation.textColor}`}>
+                  <span className="text-sm font-semibold uppercase tracking-wide">
+                    {card.name}
+                  </span>
+                  <span
+                    className={`text-xs font-medium ${presentation.accentColor}`}
+                  >
+                    {card.bank}
+                  </span>
+                </div>
+                {presentation.cornerAccent === "mastercard" ? (
+                  <SoftMastercardMark />
+                ) : null}
+              </div>
+              <div className="mt-4 flex items-center justify-between gap-3">
+                <span
+                  className={`flex h-8 w-9 items-center justify-center rounded ${presentation.chipBg}`}
+                >
+                  <img src={cardChip} alt="card-chip" className="h-6 w-8" />
+                </span>
+                <ContactlessIcon className={presentation.contactlessColor} />
+              </div>
+              <>
+                <p
+                  className={`mt-6 text-base font-black ${presentation.numberTracking} ${presentation.textColor}`}
+                >
+                  {card.cardNumber}
+                </p>
+                <div className="mt-3 flex items-center">
+                  {card.expiryMonth && card.expiryYear ? (
+                    <span
+                      className={`text-sm font-semibold ${presentation.accentColor}`}
+                    >
+                      {formatExpiry(card.expiryMonth, card.expiryYear)}
+                    </span>
+                  ) : null}
+                  <div className="ml-auto">
+                    {card.network?.toLowerCase() === "visa" ? (
+                      <VisaBadge />
+                    ) : (
+                      <MastercardBadge />
+                    )}
+                  </div>
+                </div>
+              </>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+};
 
 export { WalletPanel };
