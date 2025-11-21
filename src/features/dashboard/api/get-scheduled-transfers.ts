@@ -1,8 +1,8 @@
-import { API_BASE_URL } from "@/config/env";
 import type {
   ScheduledTransfer,
   ScheduledTransfersSummary,
 } from "@/features/dashboard/types";
+import { httpClient } from "@/lib/http-client";
 
 type ScheduledTransfersResponse = {
   success: boolean;
@@ -18,20 +18,10 @@ const getScheduledTransfers = async (accessToken: string) => {
     throw new Error("Access token is required to fetch scheduled transfers");
   }
 
-  const response = await fetch(`${API_BASE_URL}/financial/transfers/scheduled`, {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("Unable to fetch scheduled transfers");
-  }
-
-  const result = (await response.json()) as ScheduledTransfersResponse;
+  const { data: result } =
+    await httpClient.get<ScheduledTransfersResponse>(
+      "/financial/transfers/scheduled"
+    );
 
   if (!result.success || !result.data?.transfers) {
     throw new Error(result.message || "Scheduled transfers request failed");

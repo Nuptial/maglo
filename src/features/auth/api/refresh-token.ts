@@ -1,28 +1,27 @@
 import { API_BASE_URL } from "@/config/env";
 
-type RefreshTokenResult =
-  | {
-      accessToken: string;
-    }
-  | {
-    success?: boolean;
-    message?: string;
-    data?: {
-      accessToken: string;
-    };
-  };
+type RefreshTokenResult = {
+  accessToken: string;
+};
 
-const refreshToken = async (accessToken: string) => {
-  if (!accessToken) {
-    throw new Error("Access token is required to refresh session");
+/**
+ * Refresh the access token using the refresh token stored in an httpOnly cookie.
+ *
+ * If an accessToken is provided, it will be sent as a Bearer token in the
+ * Authorization header (for backends that optionally require it). If it is
+ * omitted or null, only the cookie will be used.
+ */
+const refreshToken = async (accessToken?: string | null) => {
+  const headers: HeadersInit = {};
+
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
   }
 
   const response = await fetch(`${API_BASE_URL}/users/refresh-token`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
     credentials: "include",
+    headers,
   });
 
   if (!response.ok) {
@@ -31,16 +30,11 @@ const refreshToken = async (accessToken: string) => {
 
   const result = (await response.json()) as RefreshTokenResult;
 
-  if ("accessToken" in result && typeof result.accessToken === "string") {
+  if (typeof result.accessToken === "string") {
     return { accessToken: result.accessToken };
-  }
-
-  if (result.data?.accessToken) {
-    return { accessToken: result.data.accessToken };
   }
 
   throw new Error("Session refresh failed");
 };
 
 export { refreshToken };
-

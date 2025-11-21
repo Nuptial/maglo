@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/config/env";
+import { httpClient } from "@/lib/http-client";
 
 type RegisterRequest = {
   fullName: string;
@@ -17,20 +17,10 @@ type RegisterResponse = {
 };
 
 const registerUser = async (payload: RegisterRequest) => {
-  const response = await fetch(`${API_BASE_URL}/users/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    throw new Error("Unable to contact registration service");
-  }
-
-  const result = (await response.json()) as RegisterResponse;
+  const { data: result } = await httpClient.post<RegisterResponse>(
+    "/users/register",
+    payload
+  );
 
   if (!result.success) {
     throw new Error(result.message || "Registration failed");

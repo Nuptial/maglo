@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/config/env";
+import { httpClient } from "@/lib/http-client";
 
 type LogoutResponse = {
   success: boolean;
@@ -6,26 +6,19 @@ type LogoutResponse = {
 };
 
 const logoutUser = async () => {
-  const response = await fetch(`${API_BASE_URL}/users/logout`, {
-    method: "POST",
-    credentials: "include",
-  });
+  const response = await httpClient.post<LogoutResponse | undefined>(
+    "/users/logout"
+  );
 
-  if (!response.ok) {
-    throw new Error("Unable to logout");
-  }
-
-  if (response.status === 204) {
+  if (!response.data) {
     return { success: true, message: "Logged out" };
   }
 
-  const result = (await response.json()) as LogoutResponse;
-
-  if (!result.success) {
-    throw new Error(result.message || "Unable to logout");
+  if (!response.data.success) {
+    throw new Error(response.data.message || "Unable to logout");
   }
 
-  return result;
+  return response.data;
 };
 
 export { logoutUser };

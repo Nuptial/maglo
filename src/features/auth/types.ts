@@ -16,3 +16,4 @@ export type getProfileResponse = {
   data: User;
 };
 
+export type AuthUser = User;
