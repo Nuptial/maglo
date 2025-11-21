@@ -1,5 +1,9 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import toast from "react-hot-toast";
 import { SplitPanel } from "@/components/layout/split-panel";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -7,27 +11,62 @@ import { TextField } from "@/components/ui/text-field";
 import { HeroPanel } from "@/components/hero-panel";
 import { GoogleIcon } from "@/components/google-icon";
 import underlineVector from "@/assets/vector.png";
+import { login } from "@/features/auth/api/login";
+import { useAuth } from "@/features/auth/context/use-auth";
+
+type SignInFormValues = {
+  email: string;
+  password: string;
+};
+
+const signInSchema = yup.object({
+  email: yup
+    .string()
+    .email("Enter a valid email address")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+});
 
 const SignInPage = () => {
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState({
-    email: "",
-    password: "",
+  const { setAuthData } = useAuth();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormValues>({
+    resolver: yupResolver(signInSchema),
+    mode: "onBlur",
+    reValidateMode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Placeholder: integrate with mutation once backend ready
-    console.info("Submitting credentials", formValues);
-  };
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: login,
+  });
 
   const handleGoogleSignIn = () => {
     console.info("Google sign-in clicked");
+  };
+
+  const handleFormSubmit = async (values: SignInFormValues) => {
+    try {
+      const data = await mutateAsync(values);
+      setAuthData(data);
+      toast.success("Login successful");
+      navigate({ to: "/dashboard" });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unable to sign in";
+      toast.error(message);
+    }
   };
 
   return (
@@ -51,32 +90,44 @@ const SignInPage = () => {
                 </div>
                 <form
                   className="space-y-6"
-                  onSubmit={handleSubmit}
+                  onSubmit={handleSubmit(handleFormSubmit)}
                   aria-label="Sign in form"
+                  noValidate
                 >
                   <TextField
                     id="email"
                     label="Email"
-                    name="email"
                     type="email"
                     placeholder="example@gmail.com"
                     autoComplete="email"
-                    required
-                    value={formValues.email}
-                    onChange={handleInputChange}
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={errors.email ? "email-error" : undefined}
+                    hintId="email-error"
+                    {...register("email")}
+                    hint={errors.email?.message}
                   />
                   <TextField
                     id="password"
                     label="Password"
-                    name="password"
                     type="password"
                     placeholder="••••••••"
                     autoComplete="current-password"
-                    required
-                    value={formValues.password}
-                    onChange={handleInputChange}
+                    aria-invalid={Boolean(errors.password)}
+                    aria-describedby={
+                      errors.password ? "password-error" : undefined
+                    }
+                    hintId="password-error"
+                    {...register("password")}
+                    hint={errors.password?.message}
                   />
-                  <Button type="submit">Sign In</Button>
+                  <Button
+                    type="submit"
+                    disabled={isPending}
+                    aria-disabled={isPending}
+                    aria-busy={isPending}
+                  >
+                    {isPending ? "Signing In..." : "Sign In"}
+                  </Button>
                   <Button
                     type="button"
                     variant="outline"

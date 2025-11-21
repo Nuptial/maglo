@@ -1,5 +1,9 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import toast from "react-hot-toast";
 import { SplitPanel } from "@/components/layout/split-panel";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -7,28 +11,64 @@ import { TextField } from "@/components/ui/text-field";
 import underlineVector from "@/assets/vector.png";
 import { HeroPanel } from "@/components/hero-panel";
 import { GoogleIcon } from "@/components/google-icon";
+import { registerUser } from "@/features/auth/api/register";
+
+type SignUpFormValues = {
+  fullName: string;
+  email: string;
+  password: string;
+};
+
+const signUpSchema = yup.object({
+  fullName: yup
+    .string()
+    .min(3, "Full name must be at least 3 characters")
+    .required("Full name is required"),
+  email: yup
+    .string()
+    .email("Enter a valid email address")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+});
 
 const SignUpPage = () => {
   const navigate = useNavigate();
-  const [formValues, setFormValues] = useState({
-    email: "",
-    password: "",
-    fullName: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormValues>({
+    resolver: yupResolver(signUpSchema),
+    mode: "onBlur",
+    reValidateMode: "onChange",
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+    },
   });
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Placeholder: integrate with mutation once backend ready
-    console.info("Submitting credentials", formValues);
-  };
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: registerUser,
+  });
 
   const handleGoogleSignIn = () => {
     console.info("Google sign-in clicked");
+  };
+
+  const handleFormSubmit = async (values: SignUpFormValues) => {
+    try {
+      const result = await mutateAsync(values);
+      toast.success(result.message || "Registration successful");
+      navigate({ to: "/sign-in" });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unable to register";
+      toast.error(message);
+    }
   };
 
   return (
@@ -52,43 +92,58 @@ const SignUpPage = () => {
             </div>
             <form
               className="space-y-6"
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit(handleFormSubmit)}
               aria-label="Sign up form"
+              noValidate
             >
               <TextField
                 id="fullName"
                 label="Full Name"
-                name="fullName"
                 type="text"
                 placeholder="Mahfuzul Nabil"
-                autoComplete="fullName"
-                required
-                value={formValues.fullName}
-                onChange={handleInputChange}
+                autoComplete="name"
+                aria-invalid={Boolean(errors.fullName)}
+                aria-describedby={
+                  errors.fullName ? "fullName-error" : undefined
+                }
+                hintId="fullName-error"
+                {...register("fullName")}
+                hint={errors.fullName?.message}
               />
               <TextField
                 id="email"
                 label="Email"
-                name="email"
                 type="email"
                 placeholder="example@gmail.com"
                 autoComplete="email"
-                required
-                value={formValues.email}
-                onChange={handleInputChange}
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={errors.email ? "email-error" : undefined}
+                hintId="email-error"
+                {...register("email")}
+                hint={errors.email?.message}
               />
               <TextField
                 id="password"
                 label="Password"
-                name="password"
                 type="password"
                 placeholder="••••••••"
                 autoComplete="current-password"
-                required
-                value={formValues.password}
-                onChange={handleInputChange}
+                aria-invalid={Boolean(errors.password)}
+                aria-describedby={
+                  errors.password ? "password-error" : undefined
+                }
+                hintId="password-error"
+                {...register("password")}
+                hint={errors.password?.message}
               />
-              <Button type="submit">Create Account</Button>
+              <Button
+                type="submit"
+                disabled={isPending}
+                aria-disabled={isPending}
+                aria-busy={isPending}
+              >
+                {isPending ? "Creating Account..." : "Create Account"}
+              </Button>
               <Button
                 type="button"
                 variant="outline"
