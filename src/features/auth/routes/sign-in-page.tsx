@@ -2,7 +2,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import toast from "react-hot-toast";
 import { SplitPanel } from "@/app/layouts/split-panel";
 import { GoogleIcon } from "@/shared/components/icons/google-icon";
@@ -13,22 +12,12 @@ import { TextField } from "@/shared/components/ui/text-field";
 import underlineVector from "@/assets/vector.png";
 import { login } from "@/features/auth/api/login";
 import { useAuth } from "@/features/auth/context/use-auth";
+import { signInSchema } from "@/features/auth/routes/sign-in-schema";
 
 type SignInFormValues = {
   email: string;
   password: string;
 };
-
-const signInSchema = yup.object({
-  email: yup
-    .string()
-    .email("Enter a valid email address")
-    .required("Email is required"),
-  password: yup
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .required("Password is required"),
-});
 
 const SignInPage = () => {
   const navigate = useNavigate();

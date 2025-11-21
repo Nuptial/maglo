@@ -1,11 +1,5 @@
-import type { WorkingCapitalReport } from "@/features/dashboard/types";
+import type { WorkingCapitalResponse } from "@/features/dashboard/api/types";
 import { httpClient } from "@/lib/http-client";
-
-type WorkingCapitalResponse = {
-  success: boolean;
-  message: string;
-  data: WorkingCapitalReport;
-};
 
 const getWorkingCapital = async (accessToken: string) => {
   if (!accessToken) {

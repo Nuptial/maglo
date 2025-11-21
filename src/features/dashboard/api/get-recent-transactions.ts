@@ -1,22 +1,8 @@
 import type {
-  RecentTransaction,
-  RecentTransactionsSummary,
-} from "@/features/dashboard/types";
+  RecentTransactionsPayload,
+  RecentTransactionsResponse,
+} from "@/features/dashboard/api/types";
 import { httpClient } from "@/lib/http-client";
-
-type RecentTransactionsPayload = {
-  limit: number;
-  accessToken: string;
-};
-
-type RecentTransactionsResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    transactions: RecentTransaction[];
-    summary: RecentTransactionsSummary;
-  };
-};
 
 const getRecentTransactions = async ({
   limit,
@@ -44,5 +30,4 @@ const getRecentTransactions = async ({
 };
 
 export { getRecentTransactions };
-export type { RecentTransactionsPayload, RecentTransactionsResponse };
 

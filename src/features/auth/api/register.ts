@@ -1,20 +1,8 @@
+import type {
+  RegisterRequest,
+  RegisterResponse,
+} from "@/features/auth/api/types";
 import { httpClient } from "@/lib/http-client";
-
-type RegisterRequest = {
-  fullName: string;
-  email: string;
-  password: string;
-};
-
-type RegisterResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    id: string;
-    fullName: string;
-    email: string;
-  };
-};
 
 const registerUser = async (payload: RegisterRequest) => {
   const { data: result } = await httpClient.post<RegisterResponse>(

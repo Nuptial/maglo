@@ -1,13 +1,5 @@
-import type { WalletCardApi } from "@/features/dashboard/types";
+import type { WalletCardsResponse } from "@/features/dashboard/api/types";
 import { httpClient } from "@/lib/http-client";
-
-type WalletCardsResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    cards: WalletCardApi[];
-  };
-};
 
 const getWalletCards = async (accessToken: string) => {
   if (!accessToken) {

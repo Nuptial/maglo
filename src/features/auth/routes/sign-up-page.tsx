@@ -2,7 +2,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import toast from "react-hot-toast";
 import { SplitPanel } from "@/app/layouts/split-panel";
 import { Logo } from "@/shared/components/brand/logo";
@@ -12,27 +11,13 @@ import underlineVector from "@/assets/vector.png";
 import { HeroPanel } from "@/shared/components/marketing/hero-panel";
 import { GoogleIcon } from "@/shared/components/icons/google-icon";
 import { registerUser } from "@/features/auth/api/register";
+import { signUpSchema } from "@/features/auth/routes/sign-up-schema";
 
 type SignUpFormValues = {
   fullName: string;
   email: string;
   password: string;
 };
-
-const signUpSchema = yup.object({
-  fullName: yup
-    .string()
-    .min(3, "Full name must be at least 3 characters")
-    .required("Full name is required"),
-  email: yup
-    .string()
-    .email("Enter a valid email address")
-    .required("Email is required"),
-  password: yup
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .required("Password is required"),
-});
 
 const SignUpPage = () => {
   const navigate = useNavigate();

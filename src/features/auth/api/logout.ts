@@ -1,9 +1,5 @@
+import type { LogoutResponse } from "@/features/auth/api/types";
 import { httpClient } from "@/lib/http-client";
-
-type LogoutResponse = {
-  success: boolean;
-  message: string;
-};
 
 const logoutUser = async () => {
   const response = await httpClient.post<LogoutResponse | undefined>(

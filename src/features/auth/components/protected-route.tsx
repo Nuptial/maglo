@@ -36,10 +36,6 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  if (!accessToken) {
-    return null;
-  }
-
   return children;
 };
 

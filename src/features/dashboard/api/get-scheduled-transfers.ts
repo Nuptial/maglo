@@ -1,17 +1,5 @@
-import type {
-  ScheduledTransfer,
-  ScheduledTransfersSummary,
-} from "@/features/dashboard/types";
+import type { ScheduledTransfersResponse } from "@/features/dashboard/api/types";
 import { httpClient } from "@/lib/http-client";
-
-type ScheduledTransfersResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    transfers: ScheduledTransfer[];
-    summary: ScheduledTransfersSummary;
-  };
-};
 
 const getScheduledTransfers = async (accessToken: string) => {
   if (!accessToken) {

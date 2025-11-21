@@ -1,11 +1,5 @@
-import type { FinancialSummary } from "@/features/dashboard/types";
+import type { FinancialSummaryResponse } from "@/features/dashboard/api/types";
 import { httpClient } from "@/lib/http-client";
-
-type FinancialSummaryResponse = {
-  success: boolean;
-  message: string;
-  data: FinancialSummary;
-};
 
 const getFinancialSummary = async (accessToken: string) => {
   if (!accessToken) {

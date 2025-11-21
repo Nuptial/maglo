@@ -9,7 +9,7 @@ import {
 } from "react";
 import { refreshToken } from "@/features/auth/api/refresh-token";
 import { getProfile } from "@/features/auth/api/profile";
-import type { User } from "@/features/auth/types";
+import type { User } from "@/features/auth/api/types";
 import { configureHttpClient } from "@/lib/http-client";
 
 type AuthContextValue = {
