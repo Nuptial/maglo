@@ -1,6 +1,6 @@
 import type { ScheduledTransfer } from "@/features/dashboard/types";
-import { formatCurrency } from "@/features/dashboard/utils/currency-utils";
-import { formatTransferDate } from "@/features/dashboard/utils/date-utils";
+import { formatCurrency } from "@/shared/utils/currency";
+import { formatTransferDate } from "@/shared/utils/date";
 
 const formatTransferAmount = (value: number, currency: string) => {
   if (currency.length === 3) {

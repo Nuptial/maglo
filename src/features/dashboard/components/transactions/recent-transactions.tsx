@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import type { RecentTransaction } from "@/features/dashboard/types";
 import { getRecentTransactions } from "@/features/dashboard/api/get-recent-transactions";
 import { useAuth } from "@/features/auth/context/use-auth";
-import { formatCurrency } from "@/features/dashboard/utils/currency-utils";
-import { formatDateLabel } from "@/features/dashboard/utils/date-utils";
+import { formatCurrency } from "@/shared/utils/currency";
+import { formatDateLabel } from "@/shared/utils/date";
 
 const TRANSACTION_LIMIT = 3;
 

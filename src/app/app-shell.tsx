@@ -1,13 +1,14 @@
 import { RouterProvider } from "@tanstack/react-router";
 import { Toaster } from "react-hot-toast";
-import { AuthProvider } from "./features/auth/context/auth-context";
-import { router } from "./router";
+import { router } from "@/app/router/app-router";
+import { AuthProvider } from "@/features/auth/context/auth-context";
 
-const App = () => (
+const AppShell = () => (
   <AuthProvider>
     <RouterProvider router={router} />
     <Toaster position="top-right" />
   </AuthProvider>
 );
 
-export default App;
+export { AppShell };
+

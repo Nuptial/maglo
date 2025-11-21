@@ -1,32 +1,37 @@
 import type { ScheduledTransfer } from "@/features/dashboard/types";
+import {
+  formatTransferAmount,
+  formatTransferDate,
+  getInitials,
+} from "@/features/dashboard/utils/scheduled-transfer-utils";
 
 const scheduledTransfers: ScheduledTransfer[] = [
   {
     id: "st-1",
-    recipient: "Monica Parker",
-    bank: "Universal Bank · Checking",
-    timeLabel: "Today · 12:30 PM",
-    amount: "-$860.00",
-    direction: "out",
-    status: "Scheduled",
+    name: "Monica Parker",
+    image: null,
+    date: "2025-04-17T12:30:00.000Z",
+    amount: -860,
+    currency: "USD",
+    status: "scheduled",
   },
   {
     id: "st-2",
-    recipient: "Atlas Studio",
-    bank: "Commercial Bank · ACH",
-    timeLabel: "Tomorrow · 09:15 AM",
-    amount: "-$1,250.00",
-    direction: "out",
-    status: "Processing",
+    name: "Atlas Studio",
+    image: null,
+    date: "2025-04-18T09:15:00.000Z",
+    amount: -1250,
+    currency: "USD",
+    status: "processing",
   },
   {
     id: "st-3",
-    recipient: "Lydia Flynn",
-    bank: "Universal Bank · Savings",
-    timeLabel: "Friday · 04:45 PM",
-    amount: "+$2,400.00",
-    direction: "in",
-    status: "Scheduled",
+    name: "Lydia Flynn",
+    image: null,
+    date: "2025-04-19T16:45:00.000Z",
+    amount: 2400,
+    currency: "USD",
+    status: "scheduled",
   },
 ];
 
@@ -41,6 +46,7 @@ const ScheduledTransfersCard = () => {
         <span className="text-lg font-semibold">Scheduled Transfers</span>
         <button
           type="button"
+          aria-label="View all scheduled transfers"
           className="flex items-center gap-2 text-sm font-semibold text-emerald-600"
         >
           View All
@@ -48,39 +54,52 @@ const ScheduledTransfersCard = () => {
         </button>
       </div>
       <div className="mt-6 space-y-4">
-        {scheduledTransfers.map((transfer) => (
-          <article
-            key={transfer.id}
-            className="flex flex-col gap-3 rounded-2xl border border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
-          >
-            <div className="flex items-center gap-4">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600">
-                {transfer.recipient
-                  .split(" ")
-                  .map((part) => part[0])
-                  .join("")
-                  .slice(0, 2)}
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-slate-900">
-                  {transfer.recipient}
-                </p>
-                <p className="text-xs text-slate-400">{transfer.timeLabel}</p>
+        {scheduledTransfers.map((transfer) => {
+          const formattedAmount = formatTransferAmount(
+            transfer.amount,
+            transfer.currency
+          );
+          const isIncoming = transfer.amount >= 0;
+
+          return (
+            <article
+              key={transfer.id}
+              className="flex flex-col gap-3 rounded-2xl border border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div className="flex items-center gap-4">
+                {transfer.image ? (
+                  <img
+                    src={transfer.image}
+                    alt={transfer.name}
+                    className="h-10 w-10 rounded-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600">
+                    {getInitials(transfer.name)}
+                  </span>
+                )}
+                <div>
+                  <p className="text-sm font-semibold text-slate-900">
+                    {transfer.name}
+                  </p>
+                  <p className="text-xs text-slate-400">
+                    {formatTransferDate(transfer.date)}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="text-right">
-              <p
-                className={`text-base font-semibold ${
-                  transfer.direction === "in"
-                    ? "text-emerald-600"
-                    : "text-slate-900"
-                }`}
-              >
-                {transfer.amount}
-              </p>
-            </div>
-          </article>
-        ))}
+              <div className="text-right">
+                <p
+                  className={`text-base font-semibold ${
+                    isIncoming ? "text-emerald-600" : "text-slate-900"
+                  }`}
+                >
+                  {formattedAmount}
+                </p>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

@@ -6,7 +6,7 @@ import type {
 } from "@/features/dashboard/types";
 import { useAuth } from "@/features/auth/context/use-auth";
 import { getScheduledTransfers } from "@/features/dashboard/api/get-scheduled-transfers";
-import { formatCurrency } from "@/features/dashboard/utils/currency-utils";
+import { formatCurrency } from "@/shared/utils/currency";
 import {
   formatTransferAmount,
   formatTransferDate,

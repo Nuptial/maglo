@@ -22,8 +22,16 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   if (isRefreshing) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-slate-500">
-        Checking session...
+      <div
+        role="status"
+        aria-live="polite"
+        aria-label="Checking session"
+        className="flex min-h-screen items-center justify-center bg-slate-50"
+      >
+        <span
+          aria-hidden
+          className="h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-500"
+        />
       </div>
     );
   }

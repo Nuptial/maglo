@@ -1,4 +1,4 @@
-import { Logo } from "@/components/logo";
+import { Logo } from "@/shared/components/brand/logo";
 import {
   HelpIcon,
   HomeIcon,

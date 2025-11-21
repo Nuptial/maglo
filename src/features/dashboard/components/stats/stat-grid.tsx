@@ -9,7 +9,7 @@ import type { DashboardStat } from "@/features/dashboard/types";
 import type { ReactNode } from "react";
 import { useAuth } from "@/features/auth/context/use-auth";
 import { getFinancialSummary } from "@/features/dashboard/api/get-financial-summary";
-import { formatCurrency } from "@/features/dashboard/utils/currency-utils";
+import { formatCurrency } from "@/shared/utils/currency";
 
 const statStyleMap: Record<
   DashboardStat["id"],
@@ -162,18 +162,20 @@ const StatGrid = () => {
         return (
           <article
             key={stat.id}
-            className={`flex items-center gap-4 rounded-2xl px-5 py-6 ${style.card}`}
+            className={`flex flex-wrap gap-4 rounded-2xl px-5 py-6 ${style.card} sm:flex-nowrap sm:items-center`}
           >
             <span
-              className={`flex h-12 w-12 items-center justify-center rounded-full ${style.iconBg}`}
+              className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${style.iconBg}`}
             >
               {style.icon}
             </span>
-            <div className="flex flex-col gap-1">
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
               <p className={`text-sm font-medium ${style.label}`}>
                 {stat.label}
               </p>
-              <p className={`text-3xl font-semibold ${style.value}`}>
+              <p
+                className={`break-words text-2xl font-semibold leading-snug sm:text-3xl ${style.value}`}
+              >
                 {stat.value}
               </p>
             </div>

@@ -12,23 +12,37 @@ import type { TooltipProps } from "recharts";
 
 import { ChevronDownIcon } from "@/features/dashboard/components/icons/dashboard-icons";
 import type { WorkingCapitalDatum } from "@/features/dashboard/types";
-import { formatCurrency } from "@/features/dashboard/utils/format-currency";
+import { formatCurrency } from "@/shared/utils/currency";
 
-const workingCapitalData: WorkingCapitalDatum[] = [
+type WorkingCapitalSeed = {
+  dateLabel: string;
+  income: number;
+  expenses: number;
+  highlight?: boolean;
+};
+
+const workingCapitalSeedData: WorkingCapitalSeed[] = [
   { dateLabel: "Apr 14", income: 5300, expenses: 5600 },
   { dateLabel: "Apr 15", income: 6900, expenses: 6100 },
   { dateLabel: "Apr 16", income: 6400, expenses: 5700 },
-  {
-    dateLabel: "Apr 17",
-    income: 5500,
-    expenses: 7100,
-    highlight: true,
-    displayValue: "$5,500",
-  },
+  { dateLabel: "Apr 17", income: 5500, expenses: 7100, highlight: true },
   { dateLabel: "Apr 18", income: 4700, expenses: 6400 },
   { dateLabel: "Apr 19", income: 6200, expenses: 5200 },
   { dateLabel: "Apr 20", income: 6600, expenses: 6900 },
 ];
+
+const workingCapitalData: WorkingCapitalDatum[] = workingCapitalSeedData.map(
+  (point) => {
+    const net = point.income - point.expenses;
+    return {
+      ...point,
+      net,
+      displayValue: point.highlight
+        ? formatCurrency(point.income, { currency: "USD" })
+        : undefined,
+    };
+  }
+);
 
 const WorkingCapital = () => {
   const highlightIndex = workingCapitalData.findIndex(

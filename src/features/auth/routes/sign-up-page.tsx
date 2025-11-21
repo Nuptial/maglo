@@ -4,13 +4,13 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import toast from "react-hot-toast";
-import { SplitPanel } from "@/components/layout/split-panel";
-import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
-import { TextField } from "@/components/ui/text-field";
+import { SplitPanel } from "@/app/layouts/split-panel";
+import { Logo } from "@/shared/components/brand/logo";
+import { Button } from "@/shared/components/ui/button";
+import { TextField } from "@/shared/components/ui/text-field";
 import underlineVector from "@/assets/vector.png";
-import { HeroPanel } from "@/components/hero-panel";
-import { GoogleIcon } from "@/components/google-icon";
+import { HeroPanel } from "@/shared/components/marketing/hero-panel";
+import { GoogleIcon } from "@/shared/components/icons/google-icon";
 import { registerUser } from "@/features/auth/api/register";
 
 type SignUpFormValues = {

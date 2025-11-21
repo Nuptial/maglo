@@ -14,9 +14,9 @@ import type { TooltipProps } from "recharts";
 
 import { ChevronDownIcon } from "@/features/dashboard/components/icons/dashboard-icons";
 import type { WorkingCapitalDatum } from "@/features/dashboard/types";
-import { formatCurrency } from "@/features/dashboard/utils/currency-utils";
 import { useAuth } from "@/features/auth/context/use-auth";
 import { getWorkingCapital } from "@/features/dashboard/api/get-working-capital";
+import { formatCurrency } from "@/shared/utils/currency";
 
 const WorkingCapital = () => {
   const { accessToken } = useAuth();
@@ -48,6 +48,37 @@ const WorkingCapital = () => {
       }),
     }));
   }, [data]);
+
+  const yAxisTicks = useMemo(() => {
+    if (!workingCapitalData.length) {
+      return [0, 1000, 2000, 3000, 4000];
+    }
+
+    const values = workingCapitalData.flatMap((point) => [
+      point.income,
+      point.expenses,
+      Math.max(point.net, 0),
+    ]);
+
+    const maxValue = Math.max(...values);
+    const step = Math.max(1000, Math.ceil(maxValue / 4 / 1000) * 1000);
+    const ticks: number[] = [];
+    let current = 0;
+
+    while (current <= maxValue + step) {
+      ticks.push(current);
+      current += step;
+    }
+
+    return ticks;
+  }, [workingCapitalData]);
+
+  const yAxisDomain: [number, number] = [
+    0,
+    yAxisTicks[yAxisTicks.length - 1] || 0,
+  ];
+
+  const formatYAxisLabel = (value: number) => `${Math.round(value / 1000)}K`;
 
   const highlightIndex = workingCapitalData.findIndex(
     (point) => point.highlight
@@ -186,10 +217,12 @@ const WorkingCapital = () => {
             <YAxis
               axisLine={false}
               tickLine={false}
-              tickFormatter={(value) => `${Math.round(value / 1000)}K`}
-              tick={{ fill: "#94a3b8", fontSize: 12, dx: -26 }}
-              ticks={[0, 3000, 5000, 7000, 10000]}
-              domain={[0, 10000]}
+              width={40}
+              tickFormatter={formatYAxisLabel}
+              tick={{ fill: "#94a3b8", fontSize: 12 }}
+              ticks={yAxisTicks}
+              domain={yAxisDomain}
+              interval={0}
             />
             {highlightStart && highlightEnd ? (
               <ReferenceArea
