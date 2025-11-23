@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import type { WalletCardApi } from "@/features/dashboard/types";
 
 type CardPresentation = {
-  backgroundStyle: CSSProperties;
+  backgroundStyle?: CSSProperties;
   textColor: string;
   accentColor: string;
   chipBg: string;
@@ -12,34 +12,10 @@ type CardPresentation = {
   numberTracking: string;
   badgeClass: string;
   cornerAccent?: "mastercard";
-};
-
-const normalizeHexColor = (color: string) => {
-  if (!color) {
-    return "#0f1116";
-  }
-
-  const trimmed = color.trim();
-  if (trimmed.startsWith("#")) {
-    if (trimmed.length === 4) {
-      return `#${trimmed[1]}${trimmed[1]}${trimmed[2]}${trimmed[2]}${trimmed[3]}${trimmed[3]}`;
-    }
-    if (trimmed.length === 7) {
-      return trimmed;
-    }
-    return "#0f1116";
-  }
-
-  const sanitized = trimmed.replace(/[^0-9a-f]/gi, "").slice(0, 6);
-  return sanitized ? `#${sanitized.padEnd(6, "0")}` : "#0f1116";
-};
-
-const hexWithAlpha = (hex: string, alpha: number) => {
-  const normalized = normalizeHexColor(hex).replace("#", "");
-  const alphaHex = Math.round(alpha * 255)
-    .toString(16)
-    .padStart(2, "0");
-  return `#${normalized}${alphaHex}`;
+  backdropClass?: string;
+  maxWidthClass: string;
+  backdropStyle?: CSSProperties;
+  borderStyle?: CSSProperties;
 };
 
 const getCardPresentation = (
@@ -47,40 +23,39 @@ const getCardPresentation = (
   index: number
 ): CardPresentation => {
   const isPrimary = card.isDefault || index === 0;
-  const baseColor = normalizeHexColor(
-    card.color || (isPrimary ? "#1f1f1f" : "#f5f5f5")
-  );
-
-  const backgroundStyle: CSSProperties = isPrimary
+  const backgroundStyle: CSSProperties | undefined = isPrimary
     ? {
-        background: `linear-gradient(120deg, ${hexWithAlpha(
-          baseColor,
-          0.95
-        )} 0%, #05070c 100%)`,
+        background:
+          "linear-gradient(104.3deg, #4A4A49 2.66%, #20201F 90.57%)",
       }
-    : {
-        background: `linear-gradient(180deg, ${hexWithAlpha(
-          baseColor,
-          0.2
-        )} 0%, ${hexWithAlpha(baseColor, 0.6)} 100%)`,
-      };
+    : undefined;
 
   return {
     backgroundStyle,
-    textColor: isPrimary ? "text-white" : "text-[#0f172a]",
+    textColor: isPrimary ? "text-white" : "text-[#1f283a]",
     accentColor: isPrimary ? "text-white/70" : "text-slate-500",
-    chipBg: isPrimary ? "bg-white/20" : "bg-white/80",
-    contactlessColor: isPrimary ? "text-white/80" : "text-slate-500",
+    chipBg: isPrimary ? "bg-white/20" : "bg-[#cfcfcf]/60",
+    contactlessColor: isPrimary ? "text-white/80" : "text-slate-400",
     shadow: isPrimary
-      ? "shadow-[0_20px_55px_rgba(12,13,15,0.5)]"
-      : "shadow-[0_28px_36px_rgba(17,24,39,0.15)]",
-    stackClass: isPrimary ? "" : "-mt-14 ml-4 mr-4",
-    numberTracking: isPrimary ? "tracking-[0.32em]" : "tracking-[0.2em]",
+      ? "shadow-[0_25px_70px_rgba(9,9,11,0.55)]"
+      : "shadow-[0_30px_60px_rgba(15,23,42,0.18)]",
+    stackClass: isPrimary ? "" : "-mt-8 ml-4 mr-4",
+    numberTracking: isPrimary ? "tracking-[0.28em]" : "tracking-[0.18em]",
     badgeClass: isPrimary
       ? "bg-white/10 text-white/80"
       : "bg-white text-slate-700",
     cornerAccent:
       card.network?.toLowerCase() === "mastercard" ? "mastercard" : undefined,
+    backdropClass: isPrimary ? "" : "backdrop-blur-[16px]",
+    maxWidthClass: isPrimary ? "max-w-[360px]" : "max-w-[328px]",
+    backdropStyle: isPrimary
+      ? undefined
+      : {
+          backdropFilter: "blur(18px)",
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.52) 0%, rgba(255,255,255,0.64) 45%, #fefefe 100%)",
+        },
+    borderStyle: undefined,
   };
 };
 

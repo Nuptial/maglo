@@ -159,18 +159,20 @@ const WalletPanel = () => {
         {styledCards.map(({ card, presentation }, index) => (
           <article
             key={card.id}
-            className={`relative w-full max-w-sm overflow-hidden rounded-2xl px-6 py-4 transition ${
+            className={`relative w-full overflow-hidden rounded-2xl px-6 py-4 transition ${
               presentation.shadow
             } ${presentation.stackClass ?? ""} ${
-              index === 0 ? "sm:max-w-md" : "sm:max-w-sm"
-            }`}
+              presentation.backdropClass ?? ""
+            } ${presentation.maxWidthClass}`}
             style={{
               zIndex: index + 1,
               fontFamily: "Gordita, system-ui, sans-serif",
+              ...(presentation.backdropStyle ?? {}),
+              ...(presentation.borderStyle ?? {}),
             }}
           >
             <div
-              className="absolute inset-0"
+              className={`absolute inset-0 ${presentation.backdropClass ?? ""}`}
               style={presentation.backgroundStyle}
             />
             <div className="relative z-10">

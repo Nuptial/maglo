@@ -242,6 +242,12 @@ const WorkingCapital = () => {
               stroke="#0bb77f"
               strokeWidth={3}
               dot={false}
+              activeDot={{
+                r: 6,
+                stroke: "#0bb77f",
+                strokeWidth: 2,
+                fill: "#fff",
+              }}
             />
             <Line
               type="monotone"
@@ -249,7 +255,12 @@ const WorkingCapital = () => {
               stroke="#c6f01f"
               strokeWidth={3}
               dot={<HighlightedDot />}
-              activeDot={false}
+              activeDot={{
+                r: 6,
+                stroke: "#c6f01f",
+                strokeWidth: 2,
+                fill: "#fff",
+              }}
             />
           </LineChart>
         </ResponsiveContainer>

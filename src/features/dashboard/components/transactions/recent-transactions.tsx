@@ -122,35 +122,39 @@ const RecentTransactions = () => {
           {transactions.slice(0, TRANSACTION_LIMIT).map((transaction) => (
             <article
               key={transaction.id}
-              className="grid grid-cols-2 gap-4 py-4 text-sm text-slate-900 md:grid-cols-12 md:items-center"
+              className="flex flex-col gap-3 py-5 text-sm text-slate-900 md:grid md:grid-cols-12 md:items-center"
             >
-              <div className="col-span-2 flex items-center gap-4 md:col-span-4">
-                <img
-                  src={transaction.image}
-                  alt={`${transaction.name} logo`}
-                  className="h-10 w-10 rounded-full bg-slate-100 object-cover"
-                  loading="lazy"
-                />
-                <div>
-                  <p className="font-semibold">{transaction.name}</p>
+              <div className="flex items-center gap-4 md:col-span-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-slate-50">
+                  <img
+                    src={transaction.image}
+                    alt={`${transaction.name} logo`}
+                    className="h-8 w-8 rounded-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="flex flex-col text-left">
+                  <p className="text-base font-semibold text-slate-900">
+                    {transaction.name}
+                  </p>
                   <p className="text-xs text-slate-400">
                     {transaction.business}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center justify-center text-slate-500 md:col-span-2">
-                <span className="md:hidden text-xs font-medium uppercase text-slate-400">
-                  Type:&nbsp;
+              <div className="flex items-center justify-between text-slate-500 md:col-span-2 md:justify-center">
+                <span className="text-xs font-medium uppercase text-slate-400 md:hidden">
+                  Type
                 </span>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span>{transaction.type}</span>
-                </div>
+                <span className="text-sm font-semibold md:text-base">
+                  {transaction.type}
+                </span>
               </div>
-              <div className="flex flex-col items-center font-semibold md:col-span-3 md:flex-row md:justify-center">
-                <span className="md:hidden text-xs font-medium uppercase text-slate-400">
+              <div className="flex flex-col items-start gap-1 font-semibold md:col-span-3 md:flex-row md:items-center md:justify-center">
+                <span className="text-xs font-medium uppercase text-slate-400 md:hidden">
                   Amount
                 </span>
-                <span className="font-semibold">
+                <span className="text-base text-slate-900">
                   {formatCurrency(transaction.amount, {
                     currency: transaction.currency,
                     includeSign: true,
@@ -158,11 +162,13 @@ const RecentTransactions = () => {
                   })}
                 </span>
               </div>
-              <div className="flex flex-col items-center text-slate-400 md:col-span-3 md:flex-row md:justify-center">
-                <span className="md:hidden text-xs font-medium uppercase text-slate-400">
+              <div className="flex flex-col items-start gap-1 text-slate-400 md:col-span-3 md:flex-row md:items-center md:justify-center">
+                <span className="text-xs font-medium uppercase text-slate-400 md:hidden">
                   Date
                 </span>
-                <span>{formatDateLabel(transaction.date)}</span>
+                <span className="text-base text-slate-900 md:text-slate-500">
+                  {formatDateLabel(transaction.date)}
+                </span>
               </div>
             </article>
           ))}

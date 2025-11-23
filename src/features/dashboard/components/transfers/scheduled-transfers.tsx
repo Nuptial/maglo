@@ -124,23 +124,23 @@ const ScheduledTransfers = () => {
           return (
             <article
               key={transfer.id}
-              className="flex flex-col gap-3 rounded-2xl px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-4 rounded-2xl px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
             >
-              <div className="flex items-center gap-4">
+              <div className="flex w-full items-center gap-4 sm:w-auto">
                 {transfer.image ? (
                   <img
                     src={transfer.image}
                     alt={transfer.name}
-                    className="h-10 w-10 rounded-full object-cover"
+                    className="h-12 w-12 rounded-full object-cover"
                     loading="lazy"
                   />
                 ) : (
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold uppercase text-slate-600">
                     {getInitials(transfer.name)}
                   </span>
                 )}
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">
+                <div className="flex flex-col text-left">
+                  <p className="text-base font-semibold text-slate-900">
                     {transfer.name}
                   </p>
                   <p className="text-xs text-slate-400">
@@ -148,8 +148,11 @@ const ScheduledTransfers = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col items-start gap-2 text-right sm:flex-row sm:items-center sm:gap-4">
-                <p className="text-base font-semibold text-slate-900">
+              <div className="flex w-full flex-col items-start gap-2 text-slate-500 sm:w-auto sm:items-end">
+                <span className="text-xs font-medium uppercase text-slate-400 sm:hidden">
+                  Amount
+                </span>
+                <p className="text-lg font-semibold text-slate-900 sm:text-right">
                   {getFormattedAmount(transfer.amount, transfer.currency)}
                 </p>
               </div>

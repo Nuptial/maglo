@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { isAxiosError } from "axios";
 import { SplitPanel } from "@/app/layouts/split-panel";
 import { GoogleIcon } from "@/shared/components/icons/google-icon";
 import { HeroPanel } from "@/shared/components/marketing/hero-panel";
@@ -17,6 +18,13 @@ import { signInSchema } from "@/features/auth/routes/sign-in-schema";
 type SignInFormValues = {
   email: string;
   password: string;
+};
+
+type ApiErrorResponse = {
+  message?: string;
+  code?: string;
+  error?: string;
+  success?: boolean;
 };
 
 const SignInPage = () => {
@@ -53,9 +61,21 @@ const SignInPage = () => {
       toast.success("Login successful");
       navigate({ to: "/dashboard" });
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Unable to sign in";
-      toast.error(message);
+      const defaultMessage = "Unable to sign in";
+      if (isAxiosError(error)) {
+        const responseData = error.response?.data as
+          | ApiErrorResponse
+          | undefined;
+        const responseMessage = responseData?.message?.trim();
+        toast.error(responseMessage || error.message || defaultMessage);
+        return;
+      }
+
+      toast.error(
+        error instanceof Error
+          ? error.message || defaultMessage
+          : defaultMessage
+      );
     }
   };
 

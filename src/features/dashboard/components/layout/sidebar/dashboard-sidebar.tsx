@@ -73,7 +73,15 @@ const handleKeyDown = (
   handler();
 };
 
-const DashboardSidebar = () => {
+type DashboardSidebarProps = {
+  isMobileOpen?: boolean;
+  onClose?: () => void;
+};
+
+const DashboardSidebar = ({
+  isMobileOpen = false,
+  onClose,
+}: DashboardSidebarProps) => {
   const navigate = useNavigate();
   const { clearAuth } = useAuth();
   const { mutateAsync: logout, isPending: isLoggingOut } = useMutation({
@@ -107,6 +115,12 @@ const DashboardSidebar = () => {
     const isLogout = link.id === "logout";
     const onSelect = isLogout ? handleLogout : () => handleNavClick(link.label);
 
+    const handleSelection = () => {
+      Promise.resolve(onSelect()).finally(() => {
+        onClose?.();
+      });
+    };
+
     return (
       <button
         key={link.id}
@@ -114,8 +128,8 @@ const DashboardSidebar = () => {
         aria-current={isActive ? "page" : undefined}
         aria-label={link.label}
         tabIndex={0}
-        onClick={onSelect}
-        onKeyDown={(event) => handleKeyDown(event, onSelect)}
+        onClick={handleSelection}
+        onKeyDown={(event) => handleKeyDown(event, handleSelection)}
         disabled={isLogout && isLoggingOut}
         aria-disabled={isLogout && isLoggingOut}
         aria-busy={isLogout && isLoggingOut}
@@ -140,15 +154,37 @@ const DashboardSidebar = () => {
   };
 
   return (
-    <aside className="hidden w-full max-w-xs flex-col bg-[#fafafa] px-6 py-10 lg:flex lg:max-w-sm lg:px-8 lg:py-12 xl:w-72">
-      <div className="flex items-center gap-3">
-        <Logo />
-      </div>
-      <div className="mt-8 space-y-3">{primaryLinks.map(renderNavButton)}</div>
-      <div className="mt-auto space-y-3 border-t border-slate-100 pt-6">
-        {secondaryLinks.map(renderNavButton)}
-      </div>
-    </aside>
+    <>
+      <div
+        className={`fixed inset-0 z-40 bg-slate-900/30 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+          isMobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 max-w-xs flex-col bg-[#fafafa] px-6 py-10 shadow-xl transition-transform duration-300 ease-in-out lg:relative lg:z-0 lg:w-full lg:max-w-sm lg:translate-x-0 lg:px-8 lg:py-12 lg:shadow-none xl:w-72 ${
+          isMobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+        aria-label="Primary navigation"
+      >
+        <div className="flex items-center justify-between gap-3">
+          <Logo />
+          <button
+            type="button"
+            className="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 lg:hidden"
+            onClick={onClose}
+            aria-label="Close navigation menu"
+          >
+            Close
+          </button>
+        </div>
+        <div className="mt-8 space-y-3">{primaryLinks.map(renderNavButton)}</div>
+        <div className="mt-auto space-y-3 border-t border-slate-100 pt-6">
+          {secondaryLinks.map(renderNavButton)}
+        </div>
+      </aside>
+    </>
   );
 };
 

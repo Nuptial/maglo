@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
+import { isAxiosError } from "axios";
 import { SplitPanel } from "@/app/layouts/split-panel";
 import { Logo } from "@/shared/components/brand/logo";
 import { Button } from "@/shared/components/ui/button";
@@ -17,6 +18,13 @@ type SignUpFormValues = {
   fullName: string;
   email: string;
   password: string;
+};
+
+type ApiErrorResponse = {
+  message?: string;
+  code?: string;
+  error?: string;
+  success?: boolean;
 };
 
 const SignUpPage = () => {
@@ -50,9 +58,17 @@ const SignUpPage = () => {
       toast.success(result.message || "Registration successful");
       navigate({ to: "/sign-in" });
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Unable to register";
-      toast.error(message);
+      const defaultMessage = "Unable to register";
+      if (isAxiosError(error)) {
+        const responseData = error.response?.data as ApiErrorResponse | undefined;
+        const responseMessage = responseData?.message?.trim();
+        toast.error(responseMessage || error.message || defaultMessage);
+        return;
+      }
+
+      toast.error(
+        error instanceof Error ? error.message || defaultMessage : defaultMessage
+      );
     }
   };
 
