@@ -22,7 +22,7 @@ const TextField = ({
       {...props}
     />
     {hint ? (
-      <span id={hintId} className="text-xs text-slate-400" role="alert">
+      <span id={hintId} className="text-xs text-red-500" role="alert">
         {hint}
       </span>
     ) : null}
