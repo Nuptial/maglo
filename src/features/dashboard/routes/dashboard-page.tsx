@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { DashboardLayout } from "@/features/dashboard/components/layout/dashboard-layout";
 import { StatGrid } from "@/features/dashboard/components/stats/stat-grid";
@@ -9,7 +10,7 @@ import { ComingSoonPanel } from "@/features/dashboard/components/common/coming-s
 import { getDashboardViewFromSearch } from "@/features/dashboard/utils/dashboard-view";
 import type { DashboardView } from "@/features/dashboard/types";
 
-type SectionComponent = () => JSX.Element;
+type SectionComponent = () => ReactElement;
 
 const DashboardOverviewSection: SectionComponent = () => (
   <section

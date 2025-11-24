@@ -29,6 +29,8 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
+const REFRESH_SKIP_PATHS = new Set(["/sign-in", "/sign-up"]);
+
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessTokenState] = useState<string | null>(null);
@@ -110,6 +112,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
 
     hasInitializedRef.current = true;
+
+    const currentPath =
+      typeof window !== "undefined" ? window.location.pathname : "";
+    const shouldSkipRefresh = REFRESH_SKIP_PATHS.has(currentPath);
+
+    if (shouldSkipRefresh) {
+      return;
+    }
+
     void refreshSession();
   }, [refreshSession]);
 
