@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -29,6 +30,10 @@ type ApiErrorResponse = {
 
 const SignUpPage = () => {
   const navigate = useNavigate();
+  const navigateWithTransition = useCallback<typeof navigate>(
+    (options) => navigate({ ...options, viewTransition: true }),
+    [navigate]
+  );
   const {
     register,
     handleSubmit,
@@ -56,7 +61,7 @@ const SignUpPage = () => {
     try {
       const result = await mutateAsync(values);
       toast.success(result.message || "Registration successful");
-      navigate({ to: "/sign-in" });
+      navigateWithTransition({ to: "/sign-in" });
     } catch (error) {
       const defaultMessage = "Unable to register";
       if (isAxiosError(error)) {
@@ -161,7 +166,9 @@ const SignUpPage = () => {
                 <button
                   type="button"
                   className="font-semibold text-slate-900"
-                  onClick={() => navigate({ to: "/sign-in" })}
+                  onClick={() =>
+                    navigateWithTransition({ to: "/sign-in" })
+                  }
                 >
                   Sign in
                 </button>

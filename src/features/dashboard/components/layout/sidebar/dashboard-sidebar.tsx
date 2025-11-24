@@ -89,6 +89,8 @@ const DashboardSidebar = ({
   onClose,
 }: DashboardSidebarProps) => {
   const navigate = useNavigate();
+  const navigateWithTransition: typeof navigate = (options) =>
+    navigate({ ...options, viewTransition: true });
   const routerState = useRouterState();
   const { clearAuth } = useAuth();
   const { mutateAsync: logout, isPending: isLoggingOut } = useMutation({
@@ -102,7 +104,7 @@ const DashboardSidebar = ({
   };
 
   const handleSectionNavigation = (view: DashboardView) =>
-    navigate({
+    navigateWithTransition({
       to: "/dashboard",
       search: { view },
     });
@@ -112,7 +114,7 @@ const DashboardSidebar = ({
       await logout();
       clearAuth();
       toast.success("You have been logged out");
-      navigate({ to: "/sign-in" });
+      navigateWithTransition({ to: "/sign-in" });
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Unable to logout";

@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useCallback, useEffect, type ReactNode } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/features/auth/context/use-auth";
 
@@ -8,6 +8,10 @@ type ProtectedRouteProps = {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const navigate = useNavigate();
+  const navigateWithTransition = useCallback<typeof navigate>(
+    (options) => navigate({ ...options, viewTransition: true }),
+    [navigate]
+  );
   const { accessToken, isRefreshing } = useAuth();
 
   useEffect(() => {
@@ -16,9 +20,9 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
 
     if (!accessToken) {
-      navigate({ to: "/sign-in", replace: true });
+      navigateWithTransition({ to: "/sign-in", replace: true });
     }
-  }, [accessToken, isRefreshing, navigate]);
+  }, [accessToken, isRefreshing, navigateWithTransition]);
 
   if (isRefreshing) {
     return (

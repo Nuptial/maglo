@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -29,6 +30,10 @@ type ApiErrorResponse = {
 
 const SignInPage = () => {
   const navigate = useNavigate();
+  const navigateWithTransition = useCallback<typeof navigate>(
+    (options) => navigate({ ...options, viewTransition: true }),
+    [navigate]
+  );
   const { setAuthData, fetchProfile } = useAuth();
 
   const {
@@ -59,7 +64,7 @@ const SignInPage = () => {
       setAuthData(data);
       await fetchProfile(data.accessToken);
       toast.success("Login successful");
-      navigate({ to: "/dashboard" });
+      navigateWithTransition({ to: "/dashboard" });
     } catch (error) {
       const defaultMessage = "Unable to sign in";
       if (isAxiosError(error)) {
@@ -154,7 +159,7 @@ const SignInPage = () => {
                     <button
                       type="button"
                       className="font-semibold text-slate-900"
-                      onClick={() => navigate({ to: "/sign-up" })}
+                      onClick={() => navigateWithTransition({ to: "/sign-up" })}
                     >
                       Sign up
                     </button>
