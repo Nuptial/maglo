@@ -126,7 +126,7 @@ const DashboardSidebar = ({
   );
 
   const baseNavButtonClasses =
-    "flex w-full items-center gap-4 px-4 py-3 text-base font-semibold outline-none transition-colors focus:outline-none focus-visible:outline-none";
+    "flex w-full items-center gap-3 px-4 py-3 text-base font-semibold outline-none transition-colors focus:outline-none focus-visible:outline-none";
 
   const getNavButtonClasses = (isActive: boolean) => {
     const activeClasses = "bg-[#ccff33] text-[rgb(148,163,184)] rounded-lg";
@@ -170,7 +170,7 @@ const DashboardSidebar = ({
         aria-busy={isLogout && isLoggingOut}
         className={getNavButtonClasses(isActive)}
       >
-        <span className="flex h-10 w-10 items-center justify-center">
+        <span className="flex h-5 w-5 items-center justify-center">
           <IconComponent color={iconColor} />
         </span>
         <span>{link.label}</span>
