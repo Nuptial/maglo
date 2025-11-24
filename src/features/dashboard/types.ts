@@ -127,19 +127,28 @@ type ScheduledTransfersSummary = {
   count: number;
 };
 
-import type { ReactNode } from "react";
+import type { ComponentType } from "react";
+
+type DashboardView =
+  | "dashboard"
+  | "transactions"
+  | "invoices"
+  | "wallets"
+  | "settings"
+  | "help";
 
 type NavLink = {
   id: string;
   label: string;
-  icon: ReactNode;
-  isActive?: boolean;
+  icon: ComponentType<{ color?: string }>;
+  view?: DashboardView;
   section?: "primary" | "secondary";
 };
 
 export type {
   DashboardStat,
   FinancialSummary,
+  DashboardView,
   NavLink,
   RecentTransaction,
   RecentTransactionsSummary,

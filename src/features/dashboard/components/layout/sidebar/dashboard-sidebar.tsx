@@ -8,56 +8,62 @@ import {
   TrendIcon,
   WalletIcon,
 } from "@/features/dashboard/components/icons/dashboard-icons";
-import type { NavLink } from "@/features/dashboard/types";
+import type { DashboardView, NavLink } from "@/features/dashboard/types";
 import type { KeyboardEvent } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { logoutUser } from "@/features/auth/api/logout";
 import { useAuth } from "@/features/auth/context/use-auth";
+import { getDashboardViewFromSearch } from "@/features/dashboard/utils/dashboard-view";
 
 const navItems: NavLink[] = [
   {
     id: "dashboard",
     label: "Dashboard",
-    icon: <HomeIcon />,
-    isActive: true,
+    icon: HomeIcon,
     section: "primary",
+    view: "dashboard",
   },
   {
     id: "transactions",
     label: "Transactions",
-    icon: <TrendIcon />,
+    icon: TrendIcon,
     section: "primary",
+    view: "transactions",
   },
   {
     id: "invoices",
     label: "Invoices",
-    icon: <InvoiceIcon />,
+    icon: InvoiceIcon,
     section: "primary",
+    view: "invoices",
   },
   {
     id: "wallets",
     label: "My Wallets",
-    icon: <WalletIcon />,
+    icon: WalletIcon,
     section: "primary",
+    view: "wallets",
   },
   {
     id: "settings",
     label: "Settings",
-    icon: <SettingsIcon />,
+    icon: SettingsIcon,
     section: "primary",
+    view: "settings",
   },
   {
     id: "help",
     label: "Help",
-    icon: <HelpIcon />,
+    icon: HelpIcon,
     section: "secondary",
+    view: "help",
   },
   {
     id: "logout",
     label: "Logout",
-    icon: <LogoutIcon />,
+    icon: LogoutIcon,
     section: "secondary",
   },
 ];
@@ -83,14 +89,23 @@ const DashboardSidebar = ({
   onClose,
 }: DashboardSidebarProps) => {
   const navigate = useNavigate();
+  const routerState = useRouterState();
   const { clearAuth } = useAuth();
   const { mutateAsync: logout, isPending: isLoggingOut } = useMutation({
     mutationFn: logoutUser,
   });
 
+  const activeView = getDashboardViewFromSearch(routerState.location.search);
+
   const handleNavClick = (label: string) => {
     console.info(`Navigate to ${label}`);
   };
+
+  const handleSectionNavigation = (view: DashboardView) =>
+    navigate({
+      to: "/dashboard",
+      search: { view },
+    });
 
   const handleLogout = async () => {
     try {
@@ -110,10 +125,30 @@ const DashboardSidebar = ({
     (link) => link.section === "secondary"
   );
 
+  const baseNavButtonClasses =
+    "flex w-full items-center gap-4 px-4 py-3 text-base font-semibold outline-none transition-colors focus:outline-none focus-visible:outline-none";
+
+  const getNavButtonClasses = (isActive: boolean) => {
+    const activeClasses = "bg-[#ccff33] text-[rgb(148,163,184)] rounded-lg";
+    const inactiveClasses = "text-slate-400 hover:text-slate-600";
+
+    return `${baseNavButtonClasses} ${
+      isActive ? activeClasses : inactiveClasses
+    }`;
+  };
+
   const renderNavButton = (link: NavLink) => {
-    const isActive = Boolean(link.isActive);
     const isLogout = link.id === "logout";
-    const onSelect = isLogout ? handleLogout : () => handleNavClick(link.label);
+    const isRouteLink = Boolean(link.view);
+    const isActive =
+      isRouteLink && link.view ? link.view === activeView : false;
+    const IconComponent = link.icon;
+    const iconColor = isActive ? "#1B212D" : undefined;
+    const onSelect = isLogout
+      ? handleLogout
+      : isRouteLink && link.view
+      ? () => handleSectionNavigation(link.view as DashboardView)
+      : () => handleNavClick(link.label);
 
     const handleSelection = () => {
       Promise.resolve(onSelect()).finally(() => {
@@ -133,20 +168,10 @@ const DashboardSidebar = ({
         disabled={isLogout && isLoggingOut}
         aria-disabled={isLogout && isLoggingOut}
         aria-busy={isLogout && isLoggingOut}
-        className={`flex w-full items-center gap-4 rounded-2xl px-4 py-3 text-base font-semibold outline-none focus:outline-none focus-visible:outline-none ${
-          isActive
-            ? "bg-[#ccff33] text-slate-900"
-            : "text-slate-400 transition hover:text-slate-600"
-        }`}
+        className={getNavButtonClasses(isActive)}
       >
-        <span
-          className={`flex h-10 w-10 items-center justify-center ${
-            isActive
-              ? "bg-white/40 text-slate-900"
-              : "bg-slate-100 text-slate-400"
-          }`}
-        >
-          {link.icon}
+        <span className="flex h-10 w-10 items-center justify-center">
+          <IconComponent color={iconColor} />
         </span>
         <span>{link.label}</span>
       </button>
@@ -179,7 +204,9 @@ const DashboardSidebar = ({
             Close
           </button>
         </div>
-        <div className="mt-8 space-y-3">{primaryLinks.map(renderNavButton)}</div>
+        <div className="mt-8 space-y-3">
+          {primaryLinks.map(renderNavButton)}
+        </div>
         <div className="mt-auto space-y-3 border-t border-slate-100 pt-6">
           {secondaryLinks.map(renderNavButton)}
         </div>

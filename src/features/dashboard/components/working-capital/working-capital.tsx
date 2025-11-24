@@ -18,6 +18,24 @@ import { useAuth } from "@/features/auth/context/use-auth";
 import { getWorkingCapital } from "@/features/dashboard/api/get-working-capital";
 import { formatCurrency } from "@/shared/utils/currency";
 
+const monthTranslationMap: Record<string, string> = {
+  Ocak: "January",
+  Şubat: "February",
+  Mart: "March",
+  Nisan: "April",
+  Mayıs: "May",
+  Haziran: "June",
+  Temmuz: "July",
+  Ağustos: "August",
+  Eylül: "September",
+  Ekim: "October",
+  Kasım: "November",
+  Aralık: "December",
+};
+
+const translateMonthLabel = (label: string) =>
+  monthTranslationMap[label] ?? label;
+
 const WorkingCapital = () => {
   const { accessToken } = useAuth();
   const resolvedToken = accessToken ?? "";
@@ -36,7 +54,7 @@ const WorkingCapital = () => {
     const lastIndex = data.data.length - 1;
 
     return data.data.map((point, index) => ({
-      dateLabel: point.month,
+      dateLabel: translateMonthLabel(point.month),
       income: point.income,
       expenses: point.expense,
       net: point.net,
