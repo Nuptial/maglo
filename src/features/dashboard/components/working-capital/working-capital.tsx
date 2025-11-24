@@ -129,7 +129,7 @@ const WorkingCapital = () => {
       <section
         aria-label="Working capital loading"
         aria-busy="true"
-        className="rounded-3xl bg-white px-6 py-5 shadow-sm"
+        className="rounded-3xl border border-[rgba(245,245,245,1)] bg-white px-6 py-5 shadow-sm"
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="h-7 w-40 animate-pulse rounded-full bg-slate-100" />
@@ -152,7 +152,7 @@ const WorkingCapital = () => {
       <section
         aria-label="Working capital unavailable"
         role="alert"
-        className="rounded-3xl bg-white px-6 py-5 shadow-sm"
+        className="rounded-3xl border border-[rgba(245,245,245,1)] bg-white px-6 py-5 shadow-sm"
       >
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -180,7 +180,7 @@ const WorkingCapital = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white px-6 py-5 shadow-sm">
+    <section className="rounded-3xl border border-[rgba(245,245,245,1)] bg-white px-6 py-5 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-2xl font-semibold text-slate-900">

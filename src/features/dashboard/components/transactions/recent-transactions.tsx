@@ -32,7 +32,7 @@ const RecentTransactions = () => {
       <section
         aria-label="Recent transactions loading"
         aria-busy="true"
-        className="rounded-3xl bg-white px-6 py-5 shadow-sm"
+        className="rounded-3xl border border-[rgba(245,245,245,1)] bg-white px-6 py-5 shadow-sm"
       >
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-2xl font-semibold text-slate-900">
@@ -70,7 +70,7 @@ const RecentTransactions = () => {
         aria-label="Recent transactions unavailable"
         role="alert"
         aria-live="polite"
-        className="rounded-3xl bg-white px-6 py-5 shadow-sm"
+        className="rounded-3xl border border-[rgba(245,245,245,1)] bg-white px-6 py-5 shadow-sm"
       >
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-2xl font-semibold text-slate-900">
@@ -97,7 +97,7 @@ const RecentTransactions = () => {
   }
 
   return (
-    <section className="rounded-3xl bg-white px-6 py-5 shadow-sm">
+    <section className="rounded-3xl border border-[rgba(245,245,245,1)] bg-white px-6 py-5 shadow-sm">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-2xl font-semibold text-slate-900">
           Recent Transaction
